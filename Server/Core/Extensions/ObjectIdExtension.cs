@@ -18,12 +18,12 @@ namespace Crolow.Cms.Server.Core.Extensions
 
         public static ObjectId GetId(byte id)
         {
-            return new ObjectId(id, 0, 0, 0);
+            return ObjectId.GenerateNewId(id);
         }
 
         public static ObjectId Empty()
         {
-            return new ObjectId(0, 0, 0, 0);
+            return ObjectId.Empty;
         }
 
         public static Guid GetId()

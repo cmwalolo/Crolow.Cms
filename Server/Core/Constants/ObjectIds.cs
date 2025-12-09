@@ -26,12 +26,12 @@ namespace Crolow.Cms.Server.Core.Constants
 
         public static ObjectId CreateObjectId(int stamp)
         {
-            return new ObjectId(stamp, 0, 0, 0);
+            return ObjectId.GenerateNewId(stamp);
         }
 
         public static ObjectId CreateObjectId(ObjectIdStamps stamp)
         {
-            return new ObjectId((int)stamp, 0, 0, 0);
+            return ObjectId.GenerateNewId((int)stamp);
         }
     }
 }
