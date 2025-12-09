@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Cache\**" />
+    <Compile Remove="Startup\Utils\**" />
+    <Compile Remove="Upgrades\MongodbTools\**" />
+    <EmbeddedResource Remove="Cache\**" />
+    <EmbeddedResource Remove="Startup\Utils\**" />
+    <EmbeddedResource Remove="Upgrades\MongodbTools\**" />
+    <None Remove="Cache\**" />
+    <None Remove="Startup\Utils\**" />
+    <None Remove="Upgrades\MongodbTools\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Startup\CoreAutoConfig.tmp.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.2" />
+    <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Crolow.Common\Crolow.Apps.Common.csproj" />
+    <ProjectReference Include="..\..\Core\Crolow.Cms.Server.Core.csproj" />
+  </ItemGroup>
+
+
+
+
+
+
+</Project>

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageOutputPath>C:\dev\crolow\packages</PackageOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Contrib-2.Microsoft.AspNetCore.Identity.MongoDB" Version="2.0.6" />
+		<PackageReference Include="MongoDB.Driver" Version="2.27.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Common\Crolow.Common\Crolow.Apps.Common.csproj" />
+	  <ProjectReference Include="..\Core\Crolow.Cms.Server.Core.csproj" />
+	  <ProjectReference Include="..\Managers\Crolow.Cms.Server.Managers.csproj" />
+	</ItemGroup>
+
+</Project>
