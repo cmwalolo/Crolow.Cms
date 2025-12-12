@@ -1,11 +1,11 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Data;
-using Kalow.Apps.DataLayer.Mongo;
+using Crolow.Cms.Server.Core.Models.Databases;
 
-namespace Kalow.Apps.Repositories.Nodes
+namespace Crolow.Cms.DataLayer.Mongo.Repositories
 {
     public class TransactionRepository : Repository, ITransactionRepository
     {
-        public TransactionRepository(MongoContext context) : base(context)
+        public TransactionRepository(DatabaseContextManager manager, DataStore store) : base(manager, store)
         {
         }
     }

@@ -12,7 +12,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades
         protected readonly IManagerFactory managerFactory;
         protected readonly IWritableOptions<UpgradeSettings> upgradeSettings;
 
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
         protected INodeManager nodeManager => managerFactory.NodeManager;
 
         public UpgradeManager(IWritableOptions<UpgradeSettings> upgradeSettings,

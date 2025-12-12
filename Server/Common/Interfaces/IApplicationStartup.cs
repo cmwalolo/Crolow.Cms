@@ -8,6 +8,6 @@ namespace Crolow.Cms.Server.Common.Interfaces
     public interface IApplicationStartup
     {
         void ConfigureServices(IServiceCollection services, IConfiguration config);
-        void Configure(IApplicationBuilder app, IHostingEnvironment env);
+        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
     }
 }

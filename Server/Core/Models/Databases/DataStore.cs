@@ -8,5 +8,6 @@ namespace Crolow.Cms.Server.Core.Models.Databases
     {
         public string Schema { get; set; }
         public string TableName { get; set; }
+        public string Database { get; set; }
     }
 }

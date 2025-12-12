@@ -6,7 +6,7 @@ namespace Crolow.Cms.Server.Core.Interfaces.Managers
 {
     public interface IManagerFactory
     {
-        IDatabaseProvider DatabaseProvider { get; }
+        IModuleProvider DatabaseProvider { get; }
         ITemplateProvider TemplateProvider { get; }
         INodeManager NodeManager { get; }
         ITranslationManager TranslationManager { get; }

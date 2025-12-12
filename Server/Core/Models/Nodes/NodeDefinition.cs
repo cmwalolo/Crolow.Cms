@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Linq;
 
-namespace Kalow.Apps.Models.Nodes
+namespace Crolow.Cms.Server.Core.Models.Nodes
 {
     [Template(Schema = "Core", StorageKey = "Nodes")]
     public class NodeDefinition : INodeDefinition

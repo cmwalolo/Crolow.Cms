@@ -1,5 +1,5 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Data;
-using Kalow.Apps.DataLayer.Mongo;
+using Crolow.Cms.Server.Core.Models.Databases;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -8,26 +8,29 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Kalow.Apps.Repositories.Nodes
+namespace Crolow.Cms.DataLayer.Mongo.Repositories
 {
     public class Repository : IRepository
     {
-        protected readonly MongoContext context = null;
+        protected readonly DatabaseContext context = null;
+        protected readonly DataStore store = null;
 
-        public Repository(MongoContext context)
+        public Repository(DatabaseContextManager contextManager, DataStore store)
         {
-            this.context = context;
+            this.context = contextManager.GetContext(store);
+            this.store = store;
         }
 
         public void CreateIndex<T>(string name, string fields)
         {
-            List<BsonDocument> indexes = context.Collection<T>().Indexes.ListAsync().Result.ToListAsync().Result;
+            var col = context.Collection<T>(store, name);
+            List<BsonDocument> indexes = col.Indexes.ListAsync().Result.ToListAsync().Result;
             if (!indexes.Any(i => i["name"].AsString == name))
             {
                 CreateIndexOptions co = new CreateIndexOptions();
                 co.Name = name;
                 var e = Builders<T>.IndexKeys.Ascending(fields);
-                context.Collection<T>().Indexes.CreateOne(e, co);
+                col.Indexes.CreateOne(e, co);
             }
         }
 
@@ -35,7 +38,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                return await context.Collection<T>().Find(p => true).ToListAsync();
+                return await context.Collection<T>(store).Find(p => true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -48,7 +51,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                return await context.Collection<T>()
+                return await context.Collection<T>(store)
                                 .Find(filter)
                                 .FirstOrDefaultAsync();
             }
@@ -63,8 +66,8 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                return await context.Collection<T>()
-                                .Find(filter).ToListAsync<T>();
+                return await context.Collection<T>(store)
+                                .Find(filter).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -77,7 +80,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                context.Collection<T>().InsertMany(items);
+                context.Collection<T>(store).InsertMany(items);
             }
             catch (Exception ex)
             {
@@ -89,7 +92,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                await context.Collection<T>().InsertOneAsync(item);
+                await context.Collection<T>(store).InsertOneAsync(item);
             }
             catch (Exception ex)
             {
@@ -102,7 +105,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                DeleteResult actionResult = await context.Collection<T>().DeleteOneAsync(filter);
+                DeleteResult actionResult = await context.Collection<T>(store).DeleteOneAsync(filter);
 
                 return actionResult.IsAcknowledged
                     && actionResult.DeletedCount > 0;
@@ -117,7 +120,7 @@ namespace Kalow.Apps.Repositories.Nodes
         {
             try
             {
-                ReplaceOneResult actionResult = await context.Collection<T>().ReplaceOneAsync(filter, item, new UpdateOptions { IsUpsert = true });
+                ReplaceOneResult actionResult = await context.Collection<T>(store).ReplaceOneAsync(filter, item, new UpdateOptions { IsUpsert = true });
                 return actionResult.IsAcknowledged
                     && actionResult.ModifiedCount > 0;
             }

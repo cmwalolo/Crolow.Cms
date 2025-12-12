@@ -13,10 +13,8 @@ namespace Crolow.Cms.Server.Core.Models.Configuration
         {
 
         }
-
         public string ConnectionString { get; set; }
+        public string ClientName { get; set; }
         public string Database { get; set; }
-        public string Name { get; set; }
-        public string Schema { get; set; }
     }
 }

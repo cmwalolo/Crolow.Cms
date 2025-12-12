@@ -9,7 +9,7 @@ namespace Kalow.Apps.Managers.Data
     public class TranslationManager : ITranslationManager
     {
         protected readonly IManagerFactory managerFactory;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
 
         public TranslationManager(IManagerFactory managerFactory)
         {

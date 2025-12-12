@@ -6,6 +6,7 @@ using Crolow.Cms.Server.Core.Models.Actions.Messages;
 using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
 using Crolow.Cms.Server.Core.Models.Templates.Values;
+using Crolow.Cms.Server.Managers.Upgrades.Upgrade;
 using DataType = Crolow.Cms.Server.Core.Models.Templates.Values.DataType;
 
 namespace Kalow.Apps.Managers.Upgrades.Upgrade

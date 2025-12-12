@@ -3,7 +3,7 @@ using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Kalow.Apps.Managers
+namespace Crolow.Cms.Server.Managers
 {
     public class ManagerFactory : IManagerFactory
     {
@@ -14,7 +14,7 @@ namespace Kalow.Apps.Managers
             this.serviceProvider = serviceProvider;
         }
 
-        public IDatabaseProvider DatabaseProvider => serviceProvider.GetService<IDatabaseProvider>();
+        public IModuleProvider DatabaseProvider => serviceProvider.GetService<IModuleProvider>();
         public ITemplateProvider TemplateProvider => serviceProvider.GetService<ITemplateProvider>();
 
         public INodeManager NodeManager => serviceProvider.GetService<INodeManager>();

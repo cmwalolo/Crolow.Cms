@@ -1,12 +1,11 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Data;
-using Kalow.Apps.DataLayer.Mongo;
-using Kalow.Apps.Repositories.Nodes;
+using Crolow.Cms.Server.Core.Models.Databases;
 
-namespace Repositories
+namespace Crolow.Cms.DataLayer.Mongo.Repositories
 {
     public class DataSlipRepository : Repository, IDataSlipRepository
     {
-        public DataSlipRepository(MongoContext context) : base(context)
+        public DataSlipRepository(DatabaseContextManager manager, DataStore store) : base(manager, store)
         {
         }
     }

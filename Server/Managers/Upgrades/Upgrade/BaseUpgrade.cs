@@ -7,17 +7,17 @@ using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Models.Data;
 using Crolow.Cms.Server.Core.Models.Databases;
+using Crolow.Cms.Server.Core.Models.Nodes;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
-using Kalow.Apps.Models.Nodes;
 using MongoDB.Bson;
 using System.Reflection;
 
-namespace Kalow.Apps.Managers.Upgrades.Upgrade
+namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 {
     public class BaseUpgrade
     {
         protected readonly IManagerFactory managerFactory;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
         protected INodeManager nodeManager => managerFactory.NodeManager;
 
         public BaseUpgrade(IManagerFactory managerFactory)

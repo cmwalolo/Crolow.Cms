@@ -3,7 +3,7 @@ using Crolow.Cms.Server.Core.Extensions;
 using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
-using Kalow.Apps.Models.Nodes;
+using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Kalow.Apps.Managers.Data
     public class NodeManager : INodeManager
     {
         protected readonly IManagerFactory managerFactory;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
 
         public NodeManager(IManagerFactory managerFactory)
         {

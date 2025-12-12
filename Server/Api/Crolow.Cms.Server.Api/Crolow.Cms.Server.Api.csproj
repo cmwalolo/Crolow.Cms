@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+		<PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="7.0.0" />
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.6.2" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.2" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10398" />
+		<PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.1-dev-00077" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
+		<PackageReference Include="System.Security.Claims" Version="4.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Managers\Crolow.Cms.Server.Managers.csproj" />
+	  <ProjectReference Include="..\..\mongo\Crolow.Cms..DataLayer.Mongo\Crolow.Cms.DataLayer.Mongo.csproj" />
+	  <ProjectReference Include="..\..\mongo\Crolow.Cms.Managers.Mongo\Crolow.Cms.Managers.Mongo.csproj" />
+	  <ProjectReference Include="..\..\Services\Crolow.Cms.Server.Actions\Crolow.Cms.Server.Actions.csproj" />
+	  <ProjectReference Include="..\..\Upgrades\Crolow.Cms.Server.Upgrades.csproj" />
+	</ItemGroup>
+
+</Project>

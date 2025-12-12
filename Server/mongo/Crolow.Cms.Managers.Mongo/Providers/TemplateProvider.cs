@@ -19,7 +19,7 @@ namespace Kalow.Apps.Managers.Providers
         protected readonly IManagerFactory managerFactory;
 
         protected INodeManager nodeManager => managerFactory.NodeManager;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
         protected IEntityManager<DataTemplateSection> sectionManager => managerFactory.EntityManager<DataTemplateSection>();
         protected IEntityManager<DataTemplateField> fieldManager => managerFactory.EntityManager<DataTemplateField>();
 

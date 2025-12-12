@@ -1,9 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace Kalow.Apps.Managers.Authentication
+namespace Crolow.Cms.Server.Managers.Authentication
 {
     public static class TokenSecurityKey
     {

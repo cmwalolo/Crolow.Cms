@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<UserSecretsId>246c27be-3679-4bfe-8759-fc8b2995f2ba</UserSecretsId>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Upgrades\Crolow.Cms.Server.Upgrades.csproj" />
+	  <ProjectReference Include="..\Crolow.Cms.Server.Api\Crolow.Cms.Server.Api.csproj" />
+	</ItemGroup>
+
+</Project>

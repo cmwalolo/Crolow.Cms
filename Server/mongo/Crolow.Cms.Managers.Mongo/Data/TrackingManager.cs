@@ -9,7 +9,7 @@ namespace Kalow.Apps.Managers.Data
     public class TrackingManager : ITrackingManager
     {
         protected readonly IManagerFactory managerFactory;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
 
         public TrackingManager(IManagerFactory managerFactory)
         {

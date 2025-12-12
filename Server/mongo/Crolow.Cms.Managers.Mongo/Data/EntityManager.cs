@@ -6,8 +6,8 @@ using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
 using Crolow.Cms.Server.Core.Models.Actions;
 using Crolow.Cms.Server.Core.Models.Data;
+using Crolow.Cms.Server.Core.Models.Nodes;
 using Kalow.Apps.Models.Data;
-using Kalow.Apps.Models.Nodes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +20,7 @@ namespace Kalow.Apps.Managers.Data
         public readonly ITranslationManager translationManager;
         public readonly IRelationManager relationManager;
         public readonly ITrackingManager trackingManager;
-        public readonly IDatabaseProvider databaseProvider;
+        public readonly IModuleProvider databaseProvider;
         public readonly ITemplateProvider templateProvider;
 
         public EntityManager(IManagerFactory managerFactory)

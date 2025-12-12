@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Kalow.Apps.Managers.Startup
+namespace Crolow.Cms.Server.Managers.Startup
 {
     public class StartupManager
     {
@@ -19,7 +19,7 @@ namespace Kalow.Apps.Managers.Startup
             }
         }
 
-        public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var startups = ReflectionHelper.GetSubclassesOf(typeof(IApplicationStartup), true);
 

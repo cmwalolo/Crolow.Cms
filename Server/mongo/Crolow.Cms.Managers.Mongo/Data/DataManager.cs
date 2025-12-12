@@ -14,7 +14,7 @@ namespace Kalow.Apps.Managers.Data
     public class DataManager<T> : IDataManager<T> where T : IDataObject
     {
         protected readonly IManagerFactory managerFactory;
-        protected IDatabaseProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
 
         public DataManager(IManagerFactory managerFactory)
         {

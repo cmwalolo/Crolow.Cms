@@ -25,11 +25,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Server.Upgrades"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mongo", "Mongo", "{9FC499B7-54CF-4639-B8FF-8DBE5F1AC4D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms..DataLayer.Mongo", "Server\mongo\Crolow.Cms..DataLayer.Mongo\Crolow.Cms..DataLayer.Mongo.csproj", "{E10EB1D8-4ECF-B84F-F9ED-EC9348C3E72E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.DataLayer.Mongo", "Server\mongo\Crolow.Cms..DataLayer.Mongo\Crolow.Cms.DataLayer.Mongo.csproj", "{E10EB1D8-4ECF-B84F-F9ED-EC9348C3E72E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Managers.Mongo", "Server\mongo\Crolow.Cms.Managers.Mongo\Crolow.Cms.Managers.Mongo.csproj", "{D999DBA9-5AB7-A092-1A85-5508E96AF8BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Server.Common", "Server\Common\Crolow.Cms.Server.Common.csproj", "{930411F2-E75B-39C7-8CA6-80AC76B60F3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{AC8E931E-ED16-4D2B-8F6B-27819A7FFFCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{87896570-AEB1-4C4E-8EC8-BF775800E37A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Server.Actions", "Server\Services\Crolow.Cms.Server.Actions\Crolow.Cms.Server.Actions.csproj", "{90A6B8BC-A483-88DC-6A56-42032B09F126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Server.Api", "Server\Api\Crolow.Cms.Server.Api\Crolow.Cms.Server.Api.csproj", "{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crolow.Cms.Server.Api.EndPoint", "Server\Api\Crolow.Cms.Server.Api.EndPoint\Crolow.Cms.Server.Api.EndPoint.csproj", "{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +83,18 @@ Global
 		{930411F2-E75B-39C7-8CA6-80AC76B60F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{930411F2-E75B-39C7-8CA6-80AC76B60F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{930411F2-E75B-39C7-8CA6-80AC76B60F3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90A6B8BC-A483-88DC-6A56-42032B09F126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A6B8BC-A483-88DC-6A56-42032B09F126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90A6B8BC-A483-88DC-6A56-42032B09F126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90A6B8BC-A483-88DC-6A56-42032B09F126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +111,11 @@ Global
 		{E10EB1D8-4ECF-B84F-F9ED-EC9348C3E72E} = {9FC499B7-54CF-4639-B8FF-8DBE5F1AC4D5}
 		{D999DBA9-5AB7-A092-1A85-5508E96AF8BF} = {9FC499B7-54CF-4639-B8FF-8DBE5F1AC4D5}
 		{930411F2-E75B-39C7-8CA6-80AC76B60F3C} = {4B6C8C36-EAB4-4B8C-8733-833B55D6CBD4}
+		{AC8E931E-ED16-4D2B-8F6B-27819A7FFFCE} = {4B6C8C36-EAB4-4B8C-8733-833B55D6CBD4}
+		{87896570-AEB1-4C4E-8EC8-BF775800E37A} = {4B6C8C36-EAB4-4B8C-8733-833B55D6CBD4}
+		{90A6B8BC-A483-88DC-6A56-42032B09F126} = {87896570-AEB1-4C4E-8EC8-BF775800E37A}
+		{2D100B64-0F2D-C8B1-7792-DD9D69BE5BC7} = {AC8E931E-ED16-4D2B-8F6B-27819A7FFFCE}
+		{0F5B26E7-B4BA-DA7C-5217-6CA53467A7FA} = {AC8E931E-ED16-4D2B-8F6B-27819A7FFFCE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D22E2F87-D845-47DE-9A40-30442D105CBC}
