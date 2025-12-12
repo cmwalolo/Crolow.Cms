@@ -384,3 +384,4 @@ output*.html
 /Skrabby.Installer/setup/SkrabbySetup-1-0.1.exe
 /Skrabby.Installer/setup/SkrabbySetup-1-0.1.zip
 *.exe
+/Server/Api/Crolow.Cms.Server.Api.EndPoint/app_data
