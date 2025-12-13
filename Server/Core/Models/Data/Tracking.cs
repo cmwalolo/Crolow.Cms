@@ -7,7 +7,7 @@ using System;
 
 namespace Kalow.Apps.Models.Data
 {
-    [Template(Schema = "Core", StorageKey = "Tracking")]
+    [Template(Module = "Core", StorageKey = "Tracking")]
     public class Tracking : ITracking
     {
         public ObjectId Id { get; set; }

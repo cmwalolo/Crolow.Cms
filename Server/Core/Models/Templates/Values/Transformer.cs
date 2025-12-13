@@ -3,7 +3,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Values
 {
-    [Template(Schema = "Core", StorageKey = "Transformers", NodePath = "templating/transformers", NodeName = "o.Name")]
+    [Template(Module = "Core", StorageKey = "Transformers", NodePath = "templating/transformers", NodeName = "o.Name")]
     public class Transformer : DataObject
     {
 

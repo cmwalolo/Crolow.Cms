@@ -9,18 +9,16 @@ namespace Crolow.Cms.Server.Managers.Upgrades
 {
     public class UpgradeManager : IUpgradeManager
     {
-        protected readonly IManagerFactory managerFactory;
         protected readonly IWritableOptions<UpgradeSettings> upgradeSettings;
 
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
-        protected INodeManager nodeManager => managerFactory.NodeManager;
+        protected IModuleProviderManager manager;
 
         public UpgradeManager(IWritableOptions<UpgradeSettings> upgradeSettings,
-                        IManagerFactory managerFactory
+                        IModuleProviderManager manager
             )
         {
             this.upgradeSettings = upgradeSettings;
-            this.managerFactory = managerFactory;
+            this.manager = manager;
         }
 
         public void DoUpgrade(BaseRequest request)
@@ -44,7 +42,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades
                         string s = setting.Name + "." + setting.Version;
                         foreach (var upgrader in upgraders.Keys.Where(p => p.StartsWith(setting.Name) && p.CompareTo(s) > 0))
                         {
-                            var t = (IUpgrade)Activator.CreateInstance(upgraders[upgrader], new[] { managerFactory });
+                            var t = (IUpgrade)Activator.CreateInstance(upgraders[upgrader], new[] { manager });
                             upgrades.Add(t);
                             t.DoUpgrade(request);
                             if (request.CancelRequest)

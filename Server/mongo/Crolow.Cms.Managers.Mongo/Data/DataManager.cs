@@ -13,12 +13,11 @@ namespace Kalow.Apps.Managers.Data
 {
     public class DataManager<T> : IDataManager<T> where T : IDataObject
     {
-        protected readonly IManagerFactory managerFactory;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider databaseProvider;
 
-        public DataManager(IManagerFactory managerFactory)
+        public DataManager(IModuleProvider databaseProvider)
         {
-            this.managerFactory = managerFactory;
+            this.databaseProvider = databaseProvider;
         }
 
         public T GetNode(ObjectId dataLink)
@@ -69,9 +68,6 @@ namespace Kalow.Apps.Managers.Data
             if (dataArray.Any())
             {
                 var repository = this.databaseProvider.GetContext<T>();
-
-                // First NEW things in bulk
-                // ***TODO*** Update in bulk -- Delete not possible in liteDb
                 var newData = dataArray.Where(p => p.EditState == EditState.New).ToList();
                 repository.AddBulk(newData);
 

@@ -9,6 +9,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Nodes;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
+using Kalow.Apps.Managers.Data;
 using MongoDB.Bson;
 using System.Reflection;
 
@@ -17,27 +18,33 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
     public class BaseUpgrade
     {
         protected readonly IManagerFactory managerFactory;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
-        protected INodeManager nodeManager => managerFactory.NodeManager;
 
-        public BaseUpgrade(IManagerFactory managerFactory)
+        protected string moduleName;
+        protected IModuleProviderManager moduleProviderManager;
+        protected IModuleProvider moduleProvider;
+        protected INodeManager nodeManager;
+
+        public BaseUpgrade(IModuleProviderManager manager, string module)
         {
-            this.managerFactory = managerFactory;
+            this.moduleProviderManager = manager;
+            this.moduleName = moduleName;
+            this.moduleProvider = moduleProviderManager.GetModuleProvider(module);
+            this.nodeManager = new NodeManager(moduleProvider);
         }
 
         protected void MoveNewDataStores()
         {
             NodeDefinition rootNode = null;
-            foreach (var store in databaseProvider.GetAll())
+            foreach (var store in moduleProvider.GetAll())
             {
                 NodeDefinition node = nodeManager.GetNode(store);
                 if (node == null)
                 {
-                    node = NodeDefinitionExtension.CreateNode(store,
+                    node = NodeDefinitionExtension.CreateNode(store, store,
                                         $"{store.Schema}.{store.TableName}".ToLower(),
                                         $"{store.Schema}.{store.TableName}");
 
-                    rootNode = rootNode ?? nodeManager.EnsureFolder(store, "database/datastores");
+                    rootNode = rootNode ?? nodeManager.EnsureFolder("Core/Database/Datastores");
                     node.SetParent(rootNode);
                     node.EditState = EditState.New;
                     nodeManager.Update(node);
@@ -49,23 +56,21 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 
         protected void EnsureIndex<T>(string name, string indexes) where T : IDataObject
         {
-            var repository = databaseProvider.GetContext<T>();
+            var repository = moduleProvider.GetContext<T>();
             repository.CreateIndex<T>(name, indexes);
         }
 
         protected void EnsureDataStoreObject<T>(bool doExtraTables) where T : IDataObject
         {
-            databaseProvider.CreateStore<T>(doExtraTables);
+            moduleProvider.CreateStore<T>(doExtraTables);
 
             // Datastore will be created with default ID
-            var repository = databaseProvider.GetContext<T>();
-            repository.CreateIndex<T>("TemplateId", "TemplateId.Id");
-            repository.CreateIndex<T>("TemplateIds", "TemplateIds.Id");
-            var store = databaseProvider.GetStore<T>();
+            var repository = moduleProvider.GetContext<T>();
+            var store = moduleProvider.GetStore<T>();
 
             if (doExtraTables)
             {
-                var nodeRepository = databaseProvider.GetNodeContext();
+                var nodeRepository = moduleProvider.GetNodeContext();
 
                 nodeRepository.CreateIndex<NodeDefinition>("Key", "Key");
                 nodeRepository.CreateIndex<NodeDefinition>("Parent", "Parent.Id");
@@ -73,10 +78,10 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
                 nodeRepository.CreateIndex<NodeDefinition>("TemplateId", "TemplateId.Id");
                 nodeRepository.CreateIndex<NodeDefinition>("TemplateIds", "TemplateIds.Id");
 
-                databaseProvider.GetTrackingContext();
+                moduleProvider.GetTrackingContext();
 
 
-                var relationRepository = databaseProvider.GetRelationsContext();
+                var relationRepository = moduleProvider.GetRelationsContext();
                 relationRepository.CreateIndex<RelationContainer>("Source", "SourceNode.Id");
                 relationRepository.CreateIndex<RelationContainer>("Target", "TargetNodes.Id");
             }
@@ -84,10 +89,11 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 
         protected void DoTemplates(Assembly assembly)
         {
-            var store = databaseProvider.GetStore<DataTemplate>();
-            var dataManager = managerFactory.DataManager<DataTemplate>();
+            var store = moduleProvider.GetStore<DataTemplate>();
 
-            var rootNode = nodeManager.EnsureFolder(store, "templating/templates");
+            var dataManager = new DataManager<DataTemplate>(moduleProvider);
+
+            var rootNode = nodeManager.EnsureFolder("Core/Templating/Templates");
 
             var templateTypes = ReflectionHelper.GetClassesWithAttribute(typeof(TemplateAttribute), true, assembly);
             foreach (var templateType in templateTypes)
@@ -120,7 +126,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 
                     template.EditState = EditState.New;
 
-                    var node = NodeDefinitionExtension.CreateNode(template, template.Name.ToLower(), template.Name);
+                    var node = NodeDefinitionExtension.CreateNode(store, template, template.Name.ToLower(), template.Name);
                     node.SetParent(rootNode);
 
                     dataManager.Update(template);

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Crolow.Cms.Server.Core.Models.Nodes
 {
-    [Template(Schema = "Core", StorageKey = "Nodes")]
+    [Template(Module = "Core", StorageKey = "Nodes")]
     public class NodeDefinition : INodeDefinition
     {
         public NodeDefinition()
@@ -17,6 +17,7 @@ namespace Crolow.Cms.Server.Core.Models.Nodes
 
         public ObjectId Id { get; set; }
         public ObjectId[] Parents { get; set; }
+        public ObjectId DataId { get; set; }
         public ObjectId DatastoreId { get; set; }
         public string Key { get; set; }
         public string DisplayName { get; set; }

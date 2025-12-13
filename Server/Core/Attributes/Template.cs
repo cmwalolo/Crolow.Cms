@@ -6,15 +6,15 @@ namespace Crolow.Cms.Server.Core.Attributes
     public class TemplateAttribute : Attribute
     {
         public string Database;
-        public string Schema;
+        public string Module;
         public string StorageKey;
         public bool System;
         public string NodeName;
         public string NodePath;
         public TemplateAttribute()
         {
-            Database = "Core";
-            Schema = "Core";
+            Database = "CrolowCms-Core";
+            Module = "Core";
         }
     }
 }

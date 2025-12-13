@@ -1,6 +1,7 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Models.Actions;
+using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
 using MongoDB.Bson;
 using System;
@@ -61,7 +62,8 @@ namespace Kalow.Apps.Managers.Providers
 
         private void LoadSections(DataTemplate template)
         {
-            var root = nodeManager.EnsureFolderFrom(template, "sections");
+            DataStore store = null;
+            var root = nodeManager.EnsureFolderFrom(store, template, "Sections");
             var request = new DataRequest(LoadType.LoadObjectTranslated) { DataLink = root.Id };
             template.Sections = sectionManager.Children(request);
             LoadFields(template.Sections);

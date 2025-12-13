@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Crolow.Cms.Server.Core.Interfaces.Data
         void CreateIndex<T>(string name, string fields);
         Task Add<T>(T item);
         Task AddBulk<T>(IEnumerable<T> items);
+        Task<bool> RemoveBulk<T>(IEnumerable<ObjectId> list);
+
         Task<T> Get<T>(Expression<Func<T, bool>> filter);
         Task<IEnumerable<T>> List<T>(Expression<Func<T, bool>> filter);
         Task<IEnumerable<T>> GetAll<T>();

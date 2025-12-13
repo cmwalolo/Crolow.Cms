@@ -3,7 +3,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Values
 {
-    [Template(Schema = "Core", StorageKey = "Editors", NodePath = "templating/editors", NodeName = "o.Name")]
+    [Template(Module = "Core", StorageKey = "Editors", NodePath = "templating/editors", NodeName = "o.Name")]
     public class Editor : DataObject
     {
 

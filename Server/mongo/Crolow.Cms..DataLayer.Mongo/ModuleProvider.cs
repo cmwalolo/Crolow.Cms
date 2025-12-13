@@ -22,10 +22,10 @@ namespace Crolow.Cms.DataLayer.Mongo
         protected Dictionary<ObjectId, DataStore> cacheById = new Dictionary<ObjectId, DataStore>();
 
         protected readonly IOptions<DatabaseSettings> settings;
-        protected readonly DatabaseContextManager databaseContextManager;
+        protected readonly Server.Core.Interfaces.Managers.IDatabaseContextManager databaseContextManager;
         protected readonly string moduleName;
 
-        internal ModuleProvider(DatabaseContextManager databaseContextManager,
+        internal ModuleProvider(IDatabaseContextManager databaseContextManager,
                                 IOptions<DatabaseSettings> settings,
                                 string moduleName)
         {
@@ -44,6 +44,15 @@ namespace Crolow.Cms.DataLayer.Mongo
             }
         }
 
+        public void ClearCache()
+        {
+            lock (_lock)
+            {
+                cacheByKey.Clear();
+                cacheById.Clear();
+            }
+        }
+
         public List<DataStore> GetAll()
         {
             return GetDataStoreRepository().GetAll<DataStore>().Result.ToList();
@@ -53,53 +62,27 @@ namespace Crolow.Cms.DataLayer.Mongo
         #region Get Stores
         public DataStore GetNodeStore()
         {
-            return cacheByKey[$"{moduleName}.Nodes"];
+            return cacheByKey[$"Nodes"];
         }
 
         public DataStore GetRelationStore()
         {
-            return cacheByKey[$"{moduleName}.Relations"];
+            return cacheByKey[$"Relations"];
         }
 
         public DataStore GetDataTranslationStore()
         {
-            return cacheByKey[$"{moduleName}.Translations"];
+            return cacheByKey[$"Translations"];
         }
 
         public DataStore GetTrackingStore()
         {
-            return cacheByKey[$"{moduleName}.Trackings"];
-        }
-
-        public DataStore GetTransactionsStore()
-        {
-            return cacheByKey[$"{moduleName}.Transactions"];
-        }
-
-        public DataStore GetDataSlipStore()
-        {
-            return cacheByKey[$"{moduleName}.Slips"];
+            return cacheByKey[$"Trackings"];
         }
 
         #endregion
 
         #region  Get Contexts
-        public ITransactionRepository GetTransactionContext()
-        {
-            TransactionRepository repository = null;
-            var store = GetTransactionsStore();
-            repository = new TransactionRepository(databaseContextManager, store);
-            return repository;
-        }
-
-        public IDataSlipRepository GetDataSlipContext()
-        {
-            DataSlipRepository repository = null;
-            var store = GetDataSlipStore();
-            repository = new DataSlipRepository(databaseContextManager, store);
-            return repository;
-        }
-
         public IDataRelationRepository GetRelationsContext()
         {
             var store = GetRelationStore();
@@ -251,7 +234,7 @@ namespace Crolow.Cms.DataLayer.Mongo
                 Id = ObjectIds.DataStoreId,
                 Schema = "Core",
                 TableName = "DataStores",
-                Database = "Core"
+                Database = "CrolowCms-Core"
 
             };
             return new DataRepository(databaseContextManager, store);

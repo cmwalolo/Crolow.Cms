@@ -5,7 +5,7 @@ using MongoDB.Bson;
 
 namespace Crolow.Cms.Server.Core.Models.Data
 {
-    [Template(Schema = "Core", StorageKey = "Data")]
+    [Template(Module = "Core", StorageKey = "Data")]
     public class DataObject : IDataObject
     {
         public DataObject()

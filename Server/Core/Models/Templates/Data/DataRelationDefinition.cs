@@ -5,7 +5,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Data
 {
-    [Template(Schema = "Core", StorageKey = "RelationDefinitions", NodePath = "templating/relations", NodeName = "Relation definitions")]
+    [Template(Module = "Core", StorageKey = "RelationDefinitions", NodePath = "Core/Templating/Relations", NodeName = "Relation definitions")]
     public class DataRelationDefinition : DataObject
     {
 

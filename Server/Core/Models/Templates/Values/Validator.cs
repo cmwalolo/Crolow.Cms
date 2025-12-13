@@ -3,7 +3,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 
 namespace Crolow.Cms.Server.Core.Model.Templates.Values
 {
-    [Template(Schema = "Core", StorageKey = "Validators", NodePath = "templating/validators", NodeName = "o.Name")]
+    [Template(Module = "Core", StorageKey = "Validators", NodePath = "templating/validators", NodeName = "o.Name")]
     public class Validator : DataObject
     {
 

@@ -1,4 +1,4 @@
-﻿using Kalow.Apps.Managers.Upgrades.Upgrade;
+﻿using Crolow.Cms.Server.Upgrades;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
@@ -8,17 +8,11 @@ namespace Kalow.Apps.Api
     {
         public static void Main(string[] args)
         {
-            // We make sure some DLLs are loaded 
-            // as our reflection based configuration is not discovering some classes 
-            // TO be reviewed !
-            CoreUpgrade_1_0 pp = new CoreUpgrade_1_0(null);
-            //TopMachine_1_0 tt = new TopMachine_1_0(null);
-            //var hgu = new Kalow.Hypergram.Upgrades.Hypergram_1_0(null);
+            // *** TODO
+            // We make sure the upgrade assembly is loaded
+            // Should be changed by something more elegant in the future
 
-            //var cs = new Topmachine.Topping.Api.Startup.CoreStartup();
-            //var dcs = new Crolow.OpenAI.Dictionary.CoreStartup();
-            //var hcs = new Hypergram.Api.Startup.CoreStartup();
-
+            var tt = typeof(CoreUpgrade_1_0);
 
             BuildWebHost(args).Run();
         }

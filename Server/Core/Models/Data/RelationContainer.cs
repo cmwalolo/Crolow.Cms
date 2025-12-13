@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Crolow.Cms.Server.Core.Models.Data
 {
-    [Template(Schema = "Core", StorageKey = "Relations")]
+    [Template(Module = "Core", StorageKey = "Relations")]
     public class RelationContainer : IRelationContainer
     {
         RelationContainer()

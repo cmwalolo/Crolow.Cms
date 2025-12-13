@@ -4,7 +4,7 @@ using Crolow.Cms.Server.Core.Models.Data;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Values
 {
-    [Template(Schema = "Core", StorageKey = "DataTypes", NodePath = "templating/datatypes", NodeName = "o.Name")]
+    [Template(Module = "Core", StorageKey = "DataTypes", NodePath = "templating/datatypes", NodeName = "o.Name")]
     public class DataType : DataObject
     {
 

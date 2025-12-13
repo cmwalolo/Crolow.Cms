@@ -16,6 +16,8 @@
 	  <ProjectReference Include="..\..\Common\Crolow.Common\Crolow.Apps.Common.csproj" />
 	  <ProjectReference Include="..\Common\Crolow.Cms.Server.Common.csproj" />
 	  <ProjectReference Include="..\Core\Crolow.Cms.Server.Core.csproj" />
+	  <ProjectReference Include="..\mongo\Crolow.Cms..DataLayer.Mongo\Crolow.Cms.DataLayer.Mongo.csproj" />
+	  <ProjectReference Include="..\mongo\Crolow.Cms.Managers.Mongo\Crolow.Cms.Managers.Mongo.csproj" />
 	</ItemGroup>
 
 </Project>

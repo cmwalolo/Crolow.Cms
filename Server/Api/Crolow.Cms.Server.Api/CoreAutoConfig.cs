@@ -27,11 +27,17 @@ namespace Crolow.Cms.Server.Api
 
         public void ConfigureServices(IServiceCollection services, IConfiguration config)
         {
-            services.AddTransient<IUpgradeManager, UpgradeManager>();
             services.AddSingleton<IManagerFactory, ManagerFactory>();
 
-            services.AddTransient<IModuleProviderManager, ModuleProviderManager>();
+            services.AddSingleton<IModuleProviderManager, ModuleProviderManager>();
+            services.AddSingleton<IDatabaseContextManager, DatabaseContextManager>();
 
+            //*** Actions 
+            services.AddTransient<IActionManager, ActionManager>();
+            services.AddTransient<UpgradeAction>();
+            services.AddTransient<IUpgradeManager, UpgradeManager>();
+
+            //*** Managers */
             services.AddTransient<ITemplateProvider, TemplateProvider>();
             services.AddTransient<INodeManager, NodeManager>();
             services.AddTransient(typeof(IDataManager<>), typeof(DataManager<>));
@@ -39,9 +45,7 @@ namespace Crolow.Cms.Server.Api
             services.AddTransient<ITranslationManager, TranslationManager>();
             services.AddTransient<IRelationManager, RelationManager>();
             services.AddTransient<ITrackingManager, TrackingManager>();
-            services.AddTransient<IActionManager, ActionManager>();
 
-            services.AddTransient<UpgradeAction>();
 
             // *** TODO **** Create BsonAutomapper  for LiteDb
             //BsonAutoMapper.DefaultMappers(typeof(DataObject).Assembly);

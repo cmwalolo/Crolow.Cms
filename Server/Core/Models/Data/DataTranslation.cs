@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Kalow.Apps.Models.Data
 {
-    [Template(Schema = "Core", StorageKey = "Translations")]
+    [Template(Module = "Core", StorageKey = "Translations")]
     public class DataTranslation : IDataTranslation
     {
         public DataTranslation()

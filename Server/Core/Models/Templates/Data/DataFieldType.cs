@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Data
 {
-    [Template(Schema = "Core", StorageKey = "DataFieldTypes", NodePath = "templating/fieldtypes", NodeName = "Template field types")]
+    [Template(Module = "Core", StorageKey = "DataFieldTypes", NodePath = "Core/Templating/FieldTypes", NodeName = "Template field types")]
     public class DataFieldType : DataObject
     {
 

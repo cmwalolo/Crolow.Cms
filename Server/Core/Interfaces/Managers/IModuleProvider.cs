@@ -7,6 +7,7 @@ namespace Crolow.Cms.Server.Core.Interfaces.Managers
 {
     public interface IModuleProvider
     {
+        void ClearCache();
         void CreateStore<T>(bool doDefaults);
 
         DataStore GetNodeStore();
@@ -15,16 +16,12 @@ namespace Crolow.Cms.Server.Core.Interfaces.Managers
         DataStore GetStore<T>();
         DataStore GetStore(ObjectId link);
         DataStore GetDataTranslationStore();
-        DataStore GetTransactionsStore();
-        DataStore GetDataSlipStore();
 
         IDataRepository GetContext<T>();
-        IDataSlipRepository GetDataSlipContext();
         IDataTranslationRepository GetDataTranslationContext();
         INodeDefinitionRepository GetNodeContext();
         IDataRelationRepository GetRelationsContext();
         ITrackingRepository GetTrackingContext();
-        ITransactionRepository GetTransactionContext();
         List<DataStore> GetAll();
     }
 }

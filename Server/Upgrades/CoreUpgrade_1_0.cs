@@ -9,12 +9,12 @@ using Crolow.Cms.Server.Core.Models.Templates.Values;
 using Crolow.Cms.Server.Managers.Upgrades.Upgrade;
 using DataType = Crolow.Cms.Server.Core.Models.Templates.Values.DataType;
 
-namespace Kalow.Apps.Managers.Upgrades.Upgrade
+namespace Crolow.Cms.Server.Upgrades
 {
-    [UpgradeAttribute(Name = "Kalow.Apps.Core", Version = "0001.0000.0000")]
+    [Upgrade(Name = "Crolow.Cms.Core", Version = "0001.0000.0000")]
     public class CoreUpgrade_1_0 : BaseUpgrade, IUpgrade
     {
-        public CoreUpgrade_1_0(IManagerFactory managerFactory) : base(managerFactory)
+        public CoreUpgrade_1_0(IModuleProviderManager manager) : base(manager, "Core")
         {
         }
 
@@ -22,9 +22,7 @@ namespace Kalow.Apps.Managers.Upgrades.Upgrade
         {
             try
             {
-                databaseProvider.GetDataSlipContext();
-                databaseProvider.GetTransactionContext();
-
+                moduleProvider.ClearCache();
                 EnsureDataStoreObject<DataStore>(true);
                 EnsureDataStoreObject<DataFieldType>(false);
                 EnsureDataStoreObject<DataRelationDefinition>(false);

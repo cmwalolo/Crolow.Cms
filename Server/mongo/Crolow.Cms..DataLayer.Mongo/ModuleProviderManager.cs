@@ -11,10 +11,10 @@ namespace Crolow.Cms.DataLayer.Mongo
 
         protected static Dictionary<string, ModuleProvider> cacheByKey = new Dictionary<string, ModuleProvider>();
 
-        protected readonly DatabaseContextManager databaseContextManager;
+        protected readonly Server.Core.Interfaces.Managers.IDatabaseContextManager databaseContextManager;
         protected readonly IOptions<DatabaseSettings> settings;
 
-        public ModuleProviderManager(DatabaseContextManager databaseContextManager,
+        public ModuleProviderManager(Server.Core.Interfaces.Managers.IDatabaseContextManager databaseContextManager,
                                     IOptions<DatabaseSettings> settings)
         {
             this.databaseContextManager = databaseContextManager;
@@ -23,7 +23,7 @@ namespace Crolow.Cms.DataLayer.Mongo
 
         public IModuleProvider GetModuleProvider(string moduleName)
         {
-            if (!cacheByKey.ContainsKey(moduleName))
+            if (cacheByKey.ContainsKey(moduleName))
             {
                 return cacheByKey[moduleName];
             }

@@ -1,6 +1,7 @@
 ﻿using Crolow.Cms.Server.Core.Enums;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
+using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using System;
@@ -10,11 +11,13 @@ namespace Crolow.Cms.Server.Core.Extensions
 {
     public static class NodeDefinitionExtension
     {
-        public static NodeDefinition CreateNode(IDataObject o, string key, string name)
+        public static NodeDefinition CreateNode(DataStore store, IDataObject o, string key, string name)
         {
             return new NodeDefinition
             {
-                Id = o.Id,
+                Id = ObjectId.GenerateNewId(),
+                DataId = o.Id,
+                DatastoreId = store.Id,
                 Key = key,
                 DisplayName = name ?? key,
                 EditState = EditState.New

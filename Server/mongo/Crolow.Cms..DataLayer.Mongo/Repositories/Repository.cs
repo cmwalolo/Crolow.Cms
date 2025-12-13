@@ -1,4 +1,5 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Data;
+using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Models.Databases;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -12,10 +13,10 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
 {
     public class Repository : IRepository
     {
-        protected readonly DatabaseContext context = null;
+        protected readonly IDatabaseContext context = null;
         protected readonly DataStore store = null;
 
-        public Repository(DatabaseContextManager contextManager, DataStore store)
+        public Repository(IDatabaseContextManager contextManager, DataStore store)
         {
             this.context = contextManager.GetContext(store);
             this.store = store;
@@ -23,7 +24,7 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
 
         public void CreateIndex<T>(string name, string fields)
         {
-            var col = context.Collection<T>(store, name);
+            var col = context.Collection<T>(store);
             List<BsonDocument> indexes = col.Indexes.ListAsync().Result.ToListAsync().Result;
             if (!indexes.Any(i => i["name"].AsString == name))
             {
@@ -88,6 +89,7 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
                 throw;
             }
         }
+
         public async Task Add<T>(T item)
         {
             try
@@ -106,6 +108,23 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
             try
             {
                 DeleteResult actionResult = await context.Collection<T>(store).DeleteOneAsync(filter);
+
+                return actionResult.IsAcknowledged
+                    && actionResult.DeletedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw;
+            }
+        }
+
+        public async Task<bool> RemoveBulk<T>(IEnumerable<ObjectId> list)
+        {
+            try
+            {
+                var filter = Builders<T>.Filter.In("_id", list);
+                DeleteResult actionResult = await context.Collection<T>(store).DeleteManyAsync(filter);
 
                 return actionResult.IsAcknowledged
                     && actionResult.DeletedCount > 0;

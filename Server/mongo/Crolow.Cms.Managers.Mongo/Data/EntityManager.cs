@@ -65,7 +65,7 @@ namespace Kalow.Apps.Managers.Data
 
             if (parent == null && !string.IsNullOrEmpty(template.DefaultNodePath))
             {
-                parent = nodeManager.EnsureFolder(entity.DataObject, template.DefaultNodePath);
+                parent = nodeManager.EnsureFolder(template.DefaultNodePath);
             }
 
             if (parent != null)

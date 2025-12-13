@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Crolow.Cms.Server.Core.Models.Templates.Data
 {
-    [Template(Schema = "Core", StorageKey = "TemplateSections", NodePath = "templating/sections", NodeName = "Template Sections")]
+    [Template(Module = "Core", StorageKey = "TemplateSections", NodePath = "Sections", NodeName = "Template Sections")]
     public class DataTemplateSection : DataObject
     {
 

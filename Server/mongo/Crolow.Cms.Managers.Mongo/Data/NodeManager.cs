@@ -3,6 +3,7 @@ using Crolow.Cms.Server.Core.Extensions;
 using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
+using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -12,100 +13,100 @@ namespace Kalow.Apps.Managers.Data
 {
     public class NodeManager : INodeManager
     {
-        protected readonly IManagerFactory managerFactory;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected IModuleProvider moduleProvider;
 
-        public NodeManager(IManagerFactory managerFactory)
+        public NodeManager(IModuleProvider moduleProvider)
         {
-            this.managerFactory = managerFactory;
+            this.moduleProvider = moduleProvider;
         }
 
         #region Read 
         public NodeDefinition GetNode(IDataObject dataObject)
         {
-            var nodeRepository = this.databaseProvider.GetNodeContext();
+            var nodeRepository = this.moduleProvider.GetNodeContext();
             return nodeRepository.Get<NodeDefinition>(t => t.Id == dataObject.Id).Result;
         }
         public NodeDefinition GetNode(ObjectId dataLink)
         {
-            var nodeRepository = this.databaseProvider.GetNodeContext();
+            var nodeRepository = this.moduleProvider.GetNodeContext();
             return nodeRepository.Get<NodeDefinition>(t => t.Id == dataLink).Result;
         }
 
         public IEnumerable<NodeDefinition> GetChildren(ObjectId dataLink)
         {
-            var nodeRepository = this.databaseProvider.GetNodeContext();
+            var nodeRepository = this.moduleProvider.GetNodeContext();
             var filter = Builders<NodeDefinition>.Filter.Eq("ParentId.Guid", dataLink);
             return nodeRepository.List<NodeDefinition>(t => t.Parent == dataLink).Result;
         }
         #endregion
 
         #region utils
-        public NodeDefinition EnsureFolder(IDataObject dataObject, string path)
+        public NodeDefinition EnsureFolder(string path)
         {
-            NodeDefinition node = null;
-            var nodeRepository = this.databaseProvider.GetNodeContext();
-            var nodeStore = this.databaseProvider.GetNodeStore(dataObject.Id);
-
+            var nodeRepository = this.moduleProvider.GetNodeContext();
+            NodeDefinition parentNode = null;
             ObjectId parent = ObjectId.Empty;
             foreach (string p in path.Split('/'))
             {
-                var parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
+                parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
                 if (parentNode == null)
                 {
-                    parentNode = new NodeDefinition();
-                    parentNode.Id = dataObject.Id;
-                    parentNode.DatastoreId = /* TODO */ nodeStore.Id;
-
-                    parentNode.Key = p;
-                    if (node != null)
+                    var node = new NodeDefinition();
+                    node.Id = ObjectId.GenerateNewId();
+                    node.InternalNode = true;
+                    node.DataId = ObjectId.Empty;
+                    node.DatastoreId = ObjectId.Empty;
+                    node.Key = p;
+                    if (parentNode != null)
                     {
-                        parentNode.SetParent(node);
+                        node.SetParent(parentNode);
                     }
 
-                    nodeRepository.Add<NodeDefinition>(parentNode);
+                    nodeRepository.Add<NodeDefinition>(node);
+                    parentNode = node;
                 }
-                node = parentNode;
             }
 
-            return node;
+            // Last node 
+            return parentNode;
         }
-        public NodeDefinition EnsureFolderFrom(IDataObject dataObject, string path)
+        public NodeDefinition EnsureFolderFrom(DataStore store, IDataObject dataObject, string path)
         {
-            NodeDefinition node = null;
-            var nodeRepository = this.databaseProvider.GetNodeContext();
-            var nodeStore = this.databaseProvider.GetNodeStore(dataObject.Id);
+            var nodeRepository = this.moduleProvider.GetNodeContext();
 
             ObjectId parent = dataObject.Id;
+            NodeDefinition parentNode = null;
             foreach (string p in path.Split('/'))
             {
                 var builder = Builders<NodeDefinition>.Filter;
 
-                var parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
+                parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
                 if (parentNode == null)
                 {
-                    parentNode = new NodeDefinition();
-                    parentNode.Id = dataObject.Id;
+                    var node = new NodeDefinition();
+                    node.Id = ObjectId.GenerateNewId();
+                    node.Key = path;
+                    node.DatastoreId = store.Id;
+                    node.DataId = dataObject.Id;
 
-                    parentNode.Key = path;
-                    if (node != null)
+                    if (parentNode != null)
                     {
-                        parentNode.SetParent(node);
+                        node.SetParent(parentNode);
                     }
 
-                    nodeRepository.Add<NodeDefinition>(parentNode);
+                    nodeRepository.Add<NodeDefinition>(node);
+                    parentNode = node;
                 }
-                node = parentNode;
             }
 
-            return node;
+            return parentNode;
         }
         #endregion
 
         #region Write
         public void Update(INodeDefinition node)
         {
-            var nodeRepository = this.databaseProvider.GetNodeContext();
+            var nodeRepository = this.moduleProvider.GetNodeContext();
             switch (node.EditState)
             {
                 case EditState.New:
