@@ -10,11 +10,11 @@ namespace Crolow.Cms.DataLayer.Mongo
 {
     public class DatabaseContext : IDatabaseContext
     {
+        private static object _lock = new object();
         protected IMongoDatabase database = null;
         protected string tableName = null;
 
         private static Dictionary<string, MongoClient> clients = new Dictionary<string, MongoClient>();
-        private static Dictionary<string, IMongoDatabase> databases = new Dictionary<string, IMongoDatabase>();
 
         public static void CleanUp()
         {
@@ -22,9 +22,7 @@ namespace Crolow.Cms.DataLayer.Mongo
             {
                 client.Dispose();
             }
-
             clients = new Dictionary<string, MongoClient>();
-            databases = new Dictionary<string, IMongoDatabase>();
         }
 
         public static IDatabaseContext GetContext(IOptions<DatabaseSettings> settings, DataStore store)
@@ -35,26 +33,19 @@ namespace Crolow.Cms.DataLayer.Mongo
 
             var setting = settings.Value.Values.FirstOrDefault(s => s.Database == store.Database);
 
+
+            string db = $"{setting.ClientName}.{store.Database}";
             if (clients.ContainsKey(setting.ClientName))
             {
                 client = clients[setting.ClientName];
             }
             else
             {
-                client = new MongoClient(setting.ConnectionString);
-                clients.Add(setting.ClientName, client);
-            }
-
-
-            string db = $"{setting.ClientName}.{store.Database}";
-            if (databases.ContainsKey(db))
-            {
-                ctxt.database = databases[db];
-            }
-            else
-            {
-                ctxt.database = client.GetDatabase(store.Database);
-                databases.Add(db, ctxt.database);
+                lock (_lock)
+                {
+                    client = new MongoClient(setting.ConnectionString);
+                    clients.Add(setting.ClientName, client);
+                }
             }
 
             ctxt.database = client.GetDatabase(store.Database);
