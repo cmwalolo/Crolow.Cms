@@ -14,6 +14,7 @@ namespace Crolow.Cms.Server.Core.Interfaces.Models.Nodes
         ObjectId Id { get; set; }
         ObjectId[] Parents { get; set; }
         ObjectId Parent { get; set; }
+        ObjectId DataId { get; set; }
         ObjectId DatastoreId { get; set; }
         string Key { get; set; }
         string DisplayName { get; set; }

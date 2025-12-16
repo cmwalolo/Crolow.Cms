@@ -1,5 +1,6 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Data;
 using Crolow.Cms.Server.Core.Interfaces.Managers;
+using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Models.Databases;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -55,6 +56,21 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
                 return await context.Collection<T>(store)
                                 .Find(filter)
                                 .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw;
+            }
+        }
+
+        public async Task<T> Get<T>(ObjectId id) where T : IDataObject
+        {
+            try
+            {
+                return await this.context.Collection<T>(store)
+                    .Find(x => x.Id == id)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -149,5 +165,6 @@ namespace Crolow.Cms.DataLayer.Mongo.Repositories
                 throw;
             }
         }
+
     }
 }

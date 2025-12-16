@@ -1,6 +1,5 @@
 ﻿using Crolow.Cms.Server.Core.Enums;
 using Crolow.Cms.Server.Core.Extensions;
-using Crolow.Cms.Server.Core.Interfacers.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Managers;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
@@ -8,34 +7,47 @@ using Crolow.Cms.Server.Core.Models.Actions;
 using Crolow.Cms.Server.Core.Models.Data;
 using Crolow.Cms.Server.Core.Models.Nodes;
 using Kalow.Apps.Models.Data;
+using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Kalow.Apps.Managers.Data
 {
-    public class EntityManager<T> : IEntityManager<T> where T : IDataObject
+    public class Common : IBaseManager
     {
-        public readonly IDataManager<T> dataManager;
-        public readonly INodeManager nodeManager;
-        public readonly ITranslationManager translationManager;
-        public readonly IRelationManager relationManager;
-        public readonly ITrackingManager trackingManager;
-        public readonly IModuleProvider databaseProvider;
-        public readonly ITemplateProvider templateProvider;
+        public INodeManager nodeManager { get; }
+        public ITranslationManager translationManager { get; }
+        public IRelationManager relationManager { get; }
+        public ITrackingManager trackingManager { get; }
 
-        public EntityManager(IManagerFactory managerFactory)
+        public ITemplateProvider templateProvider { get; }
+
+
+        public Common(IModuleProvider moduleProvider, IModuleProvider coreModuleProvider)
         {
-            dataManager = managerFactory.DataManager<T>();
-            nodeManager = managerFactory.NodeManager;
-            translationManager = managerFactory.TranslationManager;
-            relationManager = managerFactory.RelationManager;
-            trackingManager = managerFactory.TrackingManager;
-            databaseProvider = managerFactory.DatabaseProvider;
-            templateProvider = managerFactory.TemplateProvider;
+            nodeManager = new NodeManager(moduleProvider);
+            translationManager = new TranslationManager(moduleProvider);
+            relationManager = new RelationManager(moduleProvider);
+            trackingManager = new TrackingManager(moduleProvider);
+        }
+    }
+
+
+    public class BaseEntityManager : IEntityManager
+    {
+        public IBaseManager Common { get; set; }
+        public readonly IModuleProvider moduleProvider;
+        public readonly IModuleProvider coreModuleProvider;
+
+        public BaseEntityManager(IModuleProvider moduleProvider)
+        {
+            this.moduleProvider = moduleProvider;
+            Common = new Common(moduleProvider, coreModuleProvider);
         }
 
         #region Validation
-        public void EnsureData(EntityContainer<T> container)
+        public void EnsureData<T>(EntityContainer<T> container) where T : IDataObject
         {
             if (container != null)
             {
@@ -43,19 +55,20 @@ namespace Kalow.Apps.Managers.Data
 
             }
         }
+        #endregion
 
-        public EntityContainer<T> CreateEntity(INodeDefinition parent)
+        public EntityContainer<T> CreateEntity<T>(INodeDefinition parent) where T : IDataObject
         {
             EntityContainer<T> entity = System.Activator.CreateInstance<EntityContainer<T>>();
 
-            var dataStore = databaseProvider.GetStore<T>();
+            var dataStore = moduleProvider.GetStore<T>();
             entity.DataObject = System.Activator.CreateInstance<T>();
             entity.DataObject.EditState = EditState.New;
-
-            var template = templateProvider.GetTemplate(entity.DataObject.GetType());
+            entity.DataObject.Id = ObjectId.GenerateNewId();
 
             entity.NodeDefinition = new NodeDefinition();
-            entity.NodeDefinition.Id = entity.DataObject.Id;
+            entity.NodeDefinition.Id = ObjectId.GenerateNewId();
+            entity.NodeDefinition.DataId = entity.DataObject.Id;
             entity.NodeDefinition.EditState = EditState.New;
             entity.NodeDefinition.DatastoreId = dataStore.Id;
 
@@ -63,68 +76,62 @@ namespace Kalow.Apps.Managers.Data
             entity.Tracking.Id = entity.DataObject.Id;
             entity.Tracking.EditState = EditState.New;
 
-            if (parent == null && !string.IsNullOrEmpty(template.DefaultNodePath))
-            {
-                parent = nodeManager.EnsureFolder(template.DefaultNodePath);
-            }
-
             if (parent != null)
             {
                 entity.NodeDefinition.SetParent(parent);
             }
             return entity;
         }
-        #endregion
 
-        public List<IEntityContainer<T>> Children(DataRequest link)
+        public List<IEntityContainer<T>> Children<T>(DataRequest link) where T : IDataObject
         {
             var result = new List<IEntityContainer<T>>();
-            foreach (var node in nodeManager.GetChildren(link.DataLink))
+            foreach (var node in Common.nodeManager.GetChildren(link.DataLink))
             {
-                result.Add(LoadEntity(link));
+                result.Add(LoadEntity<T>(link, node).Result);
             }
             return result;
         }
 
 
-        public IEntityContainer<T> LoadEntity(DataRequest link)
+        public async Task<IEntityContainer<T>> LoadEntity<T>(DataRequest link, INodeDefinition node) where T : IDataObject
         {
             IEntityContainer<T> container = new EntityContainer<T>();
             if (link.LoadType.HasFlag(LoadType.LoadObject))
             {
-                container.DataObject = dataManager.GetNode(link.DataLink);
+                container.DataObject = await moduleProvider.GetContext<T>().Get<T>(node.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadNode))
             {
-                container.NodeDefinition = nodeManager.GetNode(link.DataLink);
+                container.NodeDefinition = Common.nodeManager.GetNode(node.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadTracking))
             {
-                container.Tracking = trackingManager.GetTracking(link.DataLink);
+                container.Tracking = Common.trackingManager.GetTracking(node.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadRelations))
             {
-                container.Relations = relationManager.GetRelations(link.DataLink).ToList();
+                container.Relations = Common.relationManager.GetRelations(node.DataId).ToList();
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadTranslations))
             {
-                container.Translations = translationManager.GetTranslations(link.DataLink, link.Language).ToList();
+                container.Translations = Common.translationManager.GetTranslations(node.DataId, link.Language).ToList();
             }
 
             return container;
         }
 
-        public void UpdateEntity(EntityContainer<T> container)
+        public void UpdateEntity<T>(EntityContainer<T> container) where T : IDataObject
         {
-            if (container.DataObject != null) dataManager.Update(container.DataObject);
-            if (container.NodeDefinition != null) nodeManager.Update(container.NodeDefinition);
-            if (container.Tracking != null) trackingManager.Update(container.Tracking);
-            if (container.Translations != null) translationManager.Update(container.Translations);
-            if (container.Relations != null) relationManager.Update(container.Relations);
+            if (container.DataObject != null) moduleProvider.GetContext<T>().Update<T>(p => p.Id == container.DataObject.Id, container.DataObject);
+            if (container.NodeDefinition != null) Common.nodeManager.Update(container.NodeDefinition);
+            if (container.Tracking != null) Common.trackingManager.Update(container.Tracking);
+            if (container.Translations != null) Common.translationManager.Update(container.Translations);
+            if (container.Relations != null) Common.relationManager.Update(container.Relations);
         }
     }
 }

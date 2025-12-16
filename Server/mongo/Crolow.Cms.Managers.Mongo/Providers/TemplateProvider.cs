@@ -3,6 +3,7 @@ using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Models.Actions;
 using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
+using Kalow.Apps.Managers.Data;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -19,14 +20,14 @@ namespace Kalow.Apps.Managers.Providers
 
         protected readonly IManagerFactory managerFactory;
 
-        protected INodeManager nodeManager => managerFactory.NodeManager;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
-        protected IEntityManager<DataTemplateSection> sectionManager => managerFactory.EntityManager<DataTemplateSection>();
-        protected IEntityManager<DataTemplateField> fieldManager => managerFactory.EntityManager<DataTemplateField>();
+        protected BaseEntityManager manager;
+        protected IModuleProvider moduleProvider;
+        protected INodeManager nodeManager;
 
-        public TemplateProvider(IManagerFactory managerFactory)
+        public TemplateProvider(BaseEntityManager manager)
         {
-            this.managerFactory = managerFactory;
+            this.manager = manager;
+            this.nodeManager = manager.Common.nodeManager;
         }
 
         protected void CheckCache()
@@ -65,7 +66,7 @@ namespace Kalow.Apps.Managers.Providers
             DataStore store = null;
             var root = nodeManager.EnsureFolderFrom(store, template, "Sections");
             var request = new DataRequest(LoadType.LoadObjectTranslated) { DataLink = root.Id };
-            template.Sections = sectionManager.Children(request);
+            template.Sections = manager.Children<DataTemplateSection>(request);
             LoadFields(template.Sections);
         }
 
@@ -74,13 +75,13 @@ namespace Kalow.Apps.Managers.Providers
             foreach (var section in sections)
             {
                 var request = new DataRequest(LoadType.LoadObjectTranslated) { DataLink = section.DataObject.Id };
-                section.DataObject.Fields = fieldManager.Children(request);
+                section.DataObject.Fields = manager.Children<DataTemplateField>(request);
             }
         }
 
         protected void ReloadCache()
         {
-            var list = databaseProvider.GetContext<DataTemplate>().GetAll<DataTemplate>().Result;
+            var list = moduleProvider.GetContext<DataTemplate>().GetAll<DataTemplate>().Result;
             foreach (var item in list)
             {
                 cacheByKey.Add(Type.GetType(item.DefaultType), item);

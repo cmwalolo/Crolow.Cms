@@ -38,10 +38,11 @@ namespace Crolow.Cms.Server.Api
             services.AddTransient<IUpgradeManager, UpgradeManager>();
 
             //*** Managers */
+            services.AddTransient(typeof(IDataManager<>), typeof(DataManager<>));
+            services.AddTransient(typeof(IEntityManager), typeof(BaseEntityManager));
+
             services.AddTransient<ITemplateProvider, TemplateProvider>();
             services.AddTransient<INodeManager, NodeManager>();
-            services.AddTransient(typeof(IDataManager<>), typeof(DataManager<>));
-            services.AddTransient(typeof(IEntityManager<>), typeof(EntityManager<>));
             services.AddTransient<ITranslationManager, TranslationManager>();
             services.AddTransient<IRelationManager, RelationManager>();
             services.AddTransient<ITrackingManager, TrackingManager>();

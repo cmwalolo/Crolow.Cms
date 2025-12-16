@@ -14,6 +14,6 @@ namespace Crolow.Cms.Server.Core.Interfaces.Managers
         ITrackingManager TrackingManager { get; }
         IServiceProvider ServiceProvider { get; }
         IDataManager<T> DataManager<T>() where T : IDataObject;
-        IEntityManager<T> EntityManager<T>() where T : IDataObject;
+        IEntityManager EntityManager();
     }
 }

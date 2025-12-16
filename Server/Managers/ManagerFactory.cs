@@ -29,9 +29,9 @@ namespace Crolow.Cms.Server.Managers
             return serviceProvider.GetRequiredService<IDataManager<T>>();
         }
 
-        public IEntityManager<T> EntityManager<T>() where T : IDataObject
+        public IEntityManager EntityManager()
         {
-            return serviceProvider.GetRequiredService<IEntityManager<T>>();
+            return serviceProvider.GetRequiredService<IEntityManager>();
         }
     }
 }

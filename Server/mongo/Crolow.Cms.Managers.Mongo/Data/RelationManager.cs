@@ -8,28 +8,27 @@ namespace Kalow.Apps.Managers.Data
 {
     public class RelationManager : IRelationManager
     {
-        protected readonly IManagerFactory managerFactory;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected readonly IModuleProvider moduleProvider;
 
-        public RelationManager(IManagerFactory managerFactory)
+        public RelationManager(IModuleProvider databaseProvider)
         {
-            this.managerFactory = managerFactory;
+            this.moduleProvider = moduleProvider;
         }
 
         public IEnumerable<IRelationContainer> GetRelations(IDataObject dataObject)
         {
-            var repository = this.databaseProvider.GetRelationsContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IRelationContainer>(t => t.SourceNode == dataObject.Id && t.IsField).Result;
         }
 
         public IEnumerable<IRelationContainer> GetRelations(ObjectId dataObject)
         {
-            var repository = this.databaseProvider.GetRelationsContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IRelationContainer>(t => t.SourceNode == dataObject && t.IsField).Result;
         }
         public void Update(IRelationContainer node)
         {
-            var repository = this.databaseProvider.GetRelationsContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             switch (node.EditState)
             {
                 case EditState.New:

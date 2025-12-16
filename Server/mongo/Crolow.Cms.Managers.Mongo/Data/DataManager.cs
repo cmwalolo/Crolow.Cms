@@ -23,7 +23,6 @@ namespace Kalow.Apps.Managers.Data
         public T GetNode(ObjectId dataLink)
         {
             var repository = this.databaseProvider.GetContext<T>();
-            var filter = Builders<T>.Filter.Eq("_id", dataLink);
             return repository.Get<T>(t => t.Id == dataLink).Result;
         }
 
@@ -43,7 +42,6 @@ namespace Kalow.Apps.Managers.Data
             var nodeRepository = this.databaseProvider.GetContext<T>();
             return nodeRepository.List<T>(filter).Result;
         }
-
         public void Update(T data)
         {
             var nodeRepository = this.databaseProvider.GetContext<T>();

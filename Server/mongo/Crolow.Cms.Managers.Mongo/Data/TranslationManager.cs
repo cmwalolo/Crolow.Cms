@@ -8,41 +8,41 @@ namespace Kalow.Apps.Managers.Data
 {
     public class TranslationManager : ITranslationManager
     {
-        protected readonly IManagerFactory managerFactory;
-        protected IModuleProvider databaseProvider => managerFactory.DatabaseProvider;
+        protected readonly IModuleProvider moduleProvider;
 
-        public TranslationManager(IManagerFactory managerFactory)
+        public TranslationManager(IModuleProvider databaseProvider)
         {
-            this.managerFactory = managerFactory;
+            this.moduleProvider = moduleProvider;
         }
+
 
         public IEnumerable<IDataTranslation> GetTranslations(IDataObject dataObject, string language)
         {
-            var repository = this.databaseProvider.GetRelationsContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IDataTranslation>(p => p.Id == dataObject.Id && p.Language == language).Result;
         }
 
         public IEnumerable<IDataTranslation> GetTranslations(ObjectId link, string language)
         {
-            var repository = this.databaseProvider.GetTrackingContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IDataTranslation>(p => p.Id == link && p.Language == language).Result;
         }
 
         public IEnumerable<IDataTranslation> GetAllTranslations(IDataObject dataObject)
         {
-            var repository = this.databaseProvider.GetRelationsContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IDataTranslation>(f => f.Id == dataObject.Id).Result;
         }
 
         public IEnumerable<IDataTranslation> GetAllTranslations(ObjectId link)
         {
-            var repository = this.databaseProvider.GetTrackingContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             return repository.List<IDataTranslation>(f => f.Id == link).Result;
         }
 
         public void Update(IDataTranslation node)
         {
-            var repository = this.databaseProvider.GetDataTranslationContext();
+            var repository = this.moduleProvider.GetRelationsContext();
             switch (node.EditState)
             {
                 case EditState.New:

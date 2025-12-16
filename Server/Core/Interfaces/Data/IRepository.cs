@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Crolow.Cms.Server.Core.Interfaces.Models.Data;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -14,6 +15,8 @@ namespace Crolow.Cms.Server.Core.Interfaces.Data
         Task<bool> RemoveBulk<T>(IEnumerable<ObjectId> list);
 
         Task<T> Get<T>(Expression<Func<T, bool>> filter);
+        Task<T> Get<T>(ObjectId id) where T : IDataObject;
+
         Task<IEnumerable<T>> List<T>(Expression<Func<T, bool>> filter);
         Task<IEnumerable<T>> GetAll<T>();
         Task<bool> Remove<T>(Expression<Func<T, bool>> filter);
