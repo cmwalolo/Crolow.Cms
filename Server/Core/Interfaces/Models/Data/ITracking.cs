@@ -11,7 +11,6 @@ namespace Crolow.Cms.Server.Core.Interfaces.Models.Data
         [BsonIgnore]
         EditState EditState { get; set; }
 
-        ObjectId Id { get; set; }
         ObjectId CreatedBy { get; set; }
         ObjectId ModifiedBy { get; set; }
         ObjectId PublishedBy { get; set; }

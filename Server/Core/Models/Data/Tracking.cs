@@ -19,6 +19,7 @@ namespace Kalow.Apps.Models.Data
         public DateTime DateModified { get; set; }
         public DateTime DatePublished { get; set; }
         public DateTime DateLocked { get; set; }
+        public int CurrentVersion { get; set; }
 
         [BsonIgnore]
         public EditState EditState { get; set; }

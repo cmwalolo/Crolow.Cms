@@ -1,6 +1,7 @@
 ﻿using Crolow.Cms.Server.Core.Attributes;
 using Crolow.Cms.Server.Core.Enums;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
+using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -18,8 +19,8 @@ namespace Crolow.Cms.Server.Core.Models.Data
         public bool IsField { get; set; }
         public string FieldName { get; set; }
         public int Sequence { get; set; }
-        public ObjectId RelationDefinitionId { get; set; }
-        public ObjectId SourceNode { get; set; }
+        public IDataLink RelationDefinitionId { get; set; }
+        public IDataLink SourceNode { get; set; }
         public IRelationLink[] TargetNodes { get; set; }
 
         [BsonIgnore]
@@ -28,7 +29,6 @@ namespace Crolow.Cms.Server.Core.Models.Data
 
     public interface RelationLink : IRelationLink
     {
-        ObjectId Id { get; set; }
-        ObjectId StoreId { get; set; }
+        DataLink DataLink { get; set; }
     }
 }

@@ -16,8 +16,11 @@ namespace Crolow.Cms.Server.Core.Extensions
             return new NodeDefinition
             {
                 Id = ObjectId.GenerateNewId(),
-                DataId = o.Id,
-                DatastoreId = store.Id,
+                DataLink = new DataLink
+                {
+                    DataId = o.Id,
+                    DatastoreId = store.Id
+                },
                 Key = key,
                 DisplayName = name ?? key,
                 EditState = EditState.New

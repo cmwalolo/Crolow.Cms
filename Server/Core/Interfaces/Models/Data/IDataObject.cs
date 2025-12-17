@@ -10,5 +10,7 @@ namespace Crolow.Cms.Server.Core.Interfaces.Models.Data
         [BsonIgnore]
         EditState EditState { get; set; }
         ObjectId Id { get; set; }
+        public ObjectId DataStoreId { get; set; }
+        public ITracking Tracking { get; set; }
     }
 }

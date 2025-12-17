@@ -13,14 +13,13 @@ namespace Crolow.Cms.Server.Core.Interfaces.Models.Data
         bool IsField { get; set; }
         string FieldName { get; set; }
         int Sequence { get; set; }
-        ObjectId RelationDefinitionId { get; set; }
-        ObjectId SourceNode { get; set; }
+        IDataLink RelationDefinitionId { get; set; }
+        IDataLink SourceNode { get; set; }
         IRelationLink[] TargetNodes { get; set; }
     }
 
     public interface IRelationLink
     {
-        ObjectId Id { get; set; }
-        ObjectId StoreId { get; set; }
+        IDataLink DataLink { get; set; }
     }
 }

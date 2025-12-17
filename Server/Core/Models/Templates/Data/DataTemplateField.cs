@@ -17,6 +17,17 @@ namespace Crolow.Cms.Server.Core.Models.Templates.Data
             set;
         }
 
+        public string Label
+        {
+            get;
+            set;
+        }
+
+        public string Description
+        {
+            get;
+            set;
+        }
 
         public IRelationContainer FieldType
         {

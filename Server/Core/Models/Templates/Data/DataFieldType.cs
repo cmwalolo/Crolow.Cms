@@ -9,6 +9,9 @@ namespace Crolow.Cms.Server.Core.Models.Templates.Data
     [Template(Module = "Core", StorageKey = "DataFieldTypes", NodePath = "Core/Templating/FieldTypes", NodeName = "Template field types")]
     public class DataFieldType : DataObject
     {
+        public DataFieldType() : base()
+        {
+        }
 
         public string Name
         {

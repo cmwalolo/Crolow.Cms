@@ -65,16 +65,19 @@ namespace Kalow.Apps.Managers.Data
             entity.DataObject = System.Activator.CreateInstance<T>();
             entity.DataObject.EditState = EditState.New;
             entity.DataObject.Id = ObjectId.GenerateNewId();
+            entity.DataObject.DataStoreId = dataStore.Id;
 
             entity.NodeDefinition = new NodeDefinition();
             entity.NodeDefinition.Id = ObjectId.GenerateNewId();
-            entity.NodeDefinition.DataId = entity.DataObject.Id;
+            entity.NodeDefinition.DataLink = new DataLink
+            {
+                DataId = entity.DataObject.Id,
+                DatastoreId = dataStore.Id
+            };
             entity.NodeDefinition.EditState = EditState.New;
-            entity.NodeDefinition.DatastoreId = dataStore.Id;
 
-            entity.Tracking = new Tracking();
-            entity.Tracking.Id = entity.DataObject.Id;
-            entity.Tracking.EditState = EditState.New;
+            entity.DataObject.Tracking = new Tracking();
+            entity.DataObject.Tracking.EditState = EditState.New;
 
             if (parent != null)
             {
@@ -99,27 +102,27 @@ namespace Kalow.Apps.Managers.Data
             IEntityContainer<T> container = new EntityContainer<T>();
             if (link.LoadType.HasFlag(LoadType.LoadObject))
             {
-                container.DataObject = await moduleProvider.GetContext<T>().Get<T>(node.DataId);
+                container.DataObject = await moduleProvider.GetContext<T>().Get<T>(node.DataLink.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadNode))
             {
-                container.NodeDefinition = Common.nodeManager.GetNode(node.DataId);
+                container.NodeDefinition = Common.nodeManager.GetNode(node.DataLink.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadTracking))
             {
-                container.Tracking = Common.trackingManager.GetTracking(node.DataId);
+                container.Tracking = Common.trackingManager.GetTracking(node.DataLink.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadRelations))
             {
-                container.Relations = Common.relationManager.GetRelations(node.DataId).ToList();
+                container.Relations = Common.relationManager.GetRelations(node.DataLink.DataId).ToList();
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadTranslations))
             {
-                container.Translations = Common.translationManager.GetTranslations(node.DataId, link.Language).ToList();
+                container.Translations = Common.translationManager.GetTranslations(node.DataLink.DataId, link.Language).ToList();
             }
 
             return container;
