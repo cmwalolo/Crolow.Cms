@@ -1,6 +1,7 @@
 ﻿using Crolow.Cms.Server.Core.Attributes;
 using Crolow.Cms.Server.Core.Interfaces.Models.Data;
 using Crolow.Cms.Server.Core.Models.Data;
+using DynamicForms.Typed;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
@@ -62,6 +63,8 @@ namespace Crolow.Cms.Server.Core.Models.Templates.Data
         {
             get; set;
         }
+
+        public FormDefinition Layout { get; set; }
 
         [BsonIgnore]
         public List<IEntityContainer<DataRelationDefinition>> FieldRelations { get; set; }

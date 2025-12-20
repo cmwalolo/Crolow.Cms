@@ -19,7 +19,6 @@ namespace Kalow.Apps.Managers.Data
         public INodeManager nodeManager { get; }
         public ITranslationManager translationManager { get; }
         public IRelationManager relationManager { get; }
-        public ITrackingManager trackingManager { get; }
 
         public ITemplateProvider templateProvider { get; }
 
@@ -29,7 +28,6 @@ namespace Kalow.Apps.Managers.Data
             nodeManager = new NodeManager(moduleProvider);
             translationManager = new TranslationManager(moduleProvider);
             relationManager = new RelationManager(moduleProvider);
-            trackingManager = new TrackingManager(moduleProvider);
         }
     }
 
@@ -110,11 +108,6 @@ namespace Kalow.Apps.Managers.Data
                 container.NodeDefinition = Common.nodeManager.GetNode(node.DataLink.DataId);
             }
 
-            if (link.LoadType.HasFlag(LoadType.LoadTracking))
-            {
-                container.Tracking = Common.trackingManager.GetTracking(node.DataLink.DataId);
-            }
-
             if (link.LoadType.HasFlag(LoadType.LoadRelations))
             {
                 container.Relations = Common.relationManager.GetRelations(node.DataLink.DataId).ToList();
@@ -132,7 +125,6 @@ namespace Kalow.Apps.Managers.Data
         {
             if (container.DataObject != null) moduleProvider.GetContext<T>().Update<T>(p => p.Id == container.DataObject.Id, container.DataObject);
             if (container.NodeDefinition != null) Common.nodeManager.Update(container.NodeDefinition);
-            if (container.Tracking != null) Common.trackingManager.Update(container.Tracking);
             if (container.Translations != null) Common.translationManager.Update(container.Translations);
             if (container.Relations != null) Common.relationManager.Update(container.Relations);
         }

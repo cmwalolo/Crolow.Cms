@@ -1,4 +1,5 @@
-﻿using Crolow.Apps.Common.Reflection;
+﻿using Crolow.Apps.Common.FormBuilder;
+using Crolow.Apps.Common.Reflection;
 using Crolow.Cms.Server.Core.Attributes;
 using Crolow.Cms.Server.Core.Constants;
 using Crolow.Cms.Server.Core.Enums;
@@ -89,6 +90,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 
         protected void DoTemplates(Assembly assembly)
         {
+
             var store = moduleProvider.GetStore<DataTemplate>();
 
             var dataManager = new DataManager<DataTemplate>(moduleProvider);
@@ -128,6 +130,12 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
 
                     var node = NodeDefinitionExtension.CreateNode(store, template, template.Name.ToLower(), template.Name);
                     node.SetParent(rootNode);
+
+                    FormRegistries.Initialize();
+                    var form =
+                    ExampleSetup.BuildCustomerForm(FormRegistries.Editors, FormRegistries.Validators);
+
+                    template.Layout = form;
 
                     dataManager.Update(template);
                     nodeManager.Update(node);

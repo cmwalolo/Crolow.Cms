@@ -45,7 +45,6 @@ namespace Crolow.Cms.Server.Api
             services.AddTransient<INodeManager, NodeManager>();
             services.AddTransient<ITranslationManager, TranslationManager>();
             services.AddTransient<IRelationManager, RelationManager>();
-            services.AddTransient<ITrackingManager, TrackingManager>();
 
 
             // *** TODO **** Create BsonAutomapper  for LiteDb

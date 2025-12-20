@@ -6,9 +6,8 @@ namespace Crolow.Cms.Server.Core.Models.Actions
         LoadObject = 1,
         LoadNode = 2,
         LoadRelations = 4,
-        LoadTracking = 8,
-        LoadTranslations = 16,
-        LoadAll = 31,
-        LoadObjectTranslated = 17
+        LoadTranslations = 8,
+        LoadAll = 255,
+        LoadObjectTranslated = 9
     }
 }

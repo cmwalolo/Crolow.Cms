@@ -18,13 +18,13 @@ namespace Kalow.Apps.Managers.Data
         public IEnumerable<IRelationContainer> GetRelations(IDataObject dataObject)
         {
             var repository = this.moduleProvider.GetRelationsContext();
-            return repository.List<IRelationContainer>(t => t.SourceNode == dataObject.Id && t.IsField).Result;
+            return repository.List<IRelationContainer>(t => t.SourceNode.DataId == dataObject.Id && t.IsField).Result;
         }
 
         public IEnumerable<IRelationContainer> GetRelations(ObjectId dataObject)
         {
             var repository = this.moduleProvider.GetRelationsContext();
-            return repository.List<IRelationContainer>(t => t.SourceNode == dataObject && t.IsField).Result;
+            return repository.List<IRelationContainer>(t => t.SourceNode.DataId == dataObject && t.IsField).Result;
         }
         public void Update(IRelationContainer node)
         {

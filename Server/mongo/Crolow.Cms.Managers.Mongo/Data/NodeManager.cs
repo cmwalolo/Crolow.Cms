@@ -54,8 +54,12 @@ namespace Kalow.Apps.Managers.Data
                     var node = new NodeDefinition();
                     node.Id = ObjectId.GenerateNewId();
                     node.InternalNode = true;
-                    node.DataId = ObjectId.Empty;
-                    node.DatastoreId = ObjectId.Empty;
+                    node.DataLink =
+                        new DataLink
+                        {
+                            DataId = ObjectId.Empty,
+                            DatastoreId = ObjectId.Empty
+                        };
                     node.Key = p;
                     if (parentNode != null)
                     {
@@ -86,8 +90,12 @@ namespace Kalow.Apps.Managers.Data
                     var node = new NodeDefinition();
                     node.Id = ObjectId.GenerateNewId();
                     node.Key = path;
-                    node.DatastoreId = store.Id;
-                    node.DataId = dataObject.Id;
+
+                    new DataLink
+                    {
+                        DataId = dataObject.Id,
+                        DatastoreId = store.Id
+                    };
 
                     if (parentNode != null)
                     {

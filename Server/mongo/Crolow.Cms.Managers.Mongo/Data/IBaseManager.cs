@@ -6,7 +6,6 @@ namespace Kalow.Apps.Managers.Data
     {
         INodeManager nodeManager { get; }
         IRelationManager relationManager { get; }
-        ITrackingManager trackingManager { get; }
         ITranslationManager translationManager { get; }
     }
 }
