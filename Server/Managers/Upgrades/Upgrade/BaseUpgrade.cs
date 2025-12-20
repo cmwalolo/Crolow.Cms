@@ -131,9 +131,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
                     var node = NodeDefinitionExtension.CreateNode(store, template, template.Name.ToLower(), template.Name);
                     node.SetParent(rootNode);
 
-                    FormRegistries.Initialize();
-                    var form =
-                    ExampleSetup.BuildCustomerForm(FormRegistries.Editors, FormRegistries.Validators);
+                    var form = ExampleSetup.BuildCustomerForm();
 
                     template.Layout = form;
 

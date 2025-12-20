@@ -2,7 +2,7 @@
 // 8) Example: registries + embedded form + custom color editor
 // ==========================================================
 
-using DynamicForms.Typed;
+using DynamicForms.LayoutTree;
 
 namespace Crolow.Apps.Common.FormBuilder
 {
@@ -23,72 +23,43 @@ namespace Crolow.Apps.Common.FormBuilder
             public Address Address { get; set; } = new();
         }
 
-        public static FormDefinition BuildAddressForm(EditorRegistry editors, ValidatorRegistry validators)
-            => FormBuilder<Address>.Create(editors, validators, "Address")
-                .Tab("Main", t =>
-                    t.Section("Address", s =>
-                        s.Panel(p => p.Columns(2)
-                            .Field<string, TextEditorConfig>("Street", x => x.Street, f => f
-                                .Label("Street")
-                                .UseEditor("text", new TextEditorConfig(Placeholder: "Street..."))
-                                .MaxLength(120)
-                                .Required()
-                            )
-                            .Field<string, TextEditorConfig>("City", x => x.City, f => f
-                                .Label("City")
-                                .UseEditor("text")
-                                .MaxLength(80)
-                                .Required()
-                            )
-                            .Field<string, TextEditorConfig>("Country", x => x.Country, f => f
-                                .Label("Country")
-                                .UseEditor("text")
-                                .MaxLength(80)
-                                .Required()
-                            )
-                        )
-                    )
-                )
-                .Build();
 
-        public static FormDefinition BuildCustomerForm(EditorRegistry editors, ValidatorRegistry validators)
+
+        public static FormDefinition BuildCustomerForm()
         {
-            var addressForm = BuildAddressForm(editors, validators);
+            var addressBlock = ContainerNode.Root();
+            new ContainerBuilder<Address>(addressBlock)
+                .Section("address", s => s
+                    .Panel("p", p => p.Columns(2)
+                        .Field("Street", x => x.Street, f => f.Label("Street").Required())
+                        .Field("City", x => x.City, f => f.Label("City").Required())
+                    )
+                );
 
-            return FormBuilder<Customer>.Create(editors, validators, "Customer")
-                .Tab("General", t =>
-                    t.Section("Identity", s =>
-                        s.Panel(p => p.Columns(2)
-                            .Field<string, TextEditorConfig>("Name", x => x.Name, f => f
-                                .Label("Name")
-                                .UseEditor("text", new TextEditorConfig(Placeholder: "Customer name"))
-                                .MinLength(2)
-                                .MaxLength(120)
-                                .Required()
+            var form = FormBuilder<Customer>.Create("Customer")
+                    .Layout(root => root
+                        .Tabs("mainTabs", tabs => tabs
+                            .Tab("general", tab => tab
+                                .Section("identity", s => s
+                                    .Panel("p1", p => p.Columns(2)
+                                        .Field("Name", x => x.Name, f => f.Label("Name").Required())
+                                        .Field("Email", x => x.Email, f => f.Label("Email"))
+                                    )
+                                )
                             )
-                            .Field<string, EmailEditorConfig>("Email", x => x.Email, f => f
-                                .Label("Email")
-                                .UseEditor("email", new EmailEditorConfig(Placeholder: "name@domain.com"))
-                                .Regex(@"^\S+@\S+\.\S+$", "Invalid email")
-                            )
-                            .Field<string, ColorEditorConfig>("FavoriteColor", x => x.FavoriteColor, f => f
-                                .Label("Favorite color")
-                                .UseEditor("my:color") // uses registry default config
-                            )
-                        )
-                    )
-                )
-                .Tab("Address", t =>
-                    t.Section("Address", s =>
-                        s.Panel(p => p.Columns(1)
-                            .EmbeddedForm("Address", x => x.Address, addressForm, eb => eb
-                                .Label("Address")
-                                .Presentation(EmbeddedFormPresentation.Section)
+                            .Tab("address", tab => tab
+                                .Section("addr", s => s
+                                    .Panel("pAddr", p => p.Columns(1)
+                                    .EmbeddedContainer("Address", x => x.Address, addressBlock,
+                                                eb => eb.Label("Address").Presentation(EmbeddedPresentation.Section))
+                                    )
+                                )
                             )
                         )
                     )
-                )
-                .Build();
+                    .Build();
+            return form;
+
         }
     }
 }
