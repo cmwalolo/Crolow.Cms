@@ -33,26 +33,28 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
             this.nodeManager = new NodeManager(moduleProvider);
         }
 
-        protected void MoveNewDataStores()
+        protected async Task<bool> MoveNewDataStores()
         {
             NodeDefinition rootNode = null;
             foreach (var store in moduleProvider.GetAll())
             {
-                NodeDefinition node = nodeManager.GetNode(store);
+                NodeDefinition node = await nodeManager.GetNodeAsync(store);
                 if (node == null)
                 {
                     node = NodeDefinitionExtension.CreateNode(store, store,
                                         $"{store.Schema}.{store.TableName}".ToLower(),
                                         $"{store.Schema}.{store.TableName}");
 
-                    rootNode = rootNode ?? nodeManager.EnsureFolder("Core/Database/Datastores");
+                    rootNode = rootNode ?? await nodeManager.EnsureFolderAsync("Core/Database/Datastores");
                     node.SetParent(rootNode);
                     node.EditState = EditState.New;
-                    nodeManager.Update(node);
+                    await nodeManager.UpdateAsync(node);
                 }
 
-                node = nodeManager.GetNode(node.Id);
+                node = await nodeManager.GetNodeAsync(node.Id);
             }
+
+            return true;
         }
 
         protected void EnsureIndex<T>(string name, string indexes) where T : IDataObject
@@ -88,14 +90,14 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
             }
         }
 
-        protected void DoTemplates(Assembly assembly)
+        protected async Task DoTemplates(Assembly assembly)
         {
 
             var store = moduleProvider.GetStore<DataTemplate>();
 
             var dataManager = new DataManager<DataTemplate>(moduleProvider);
 
-            var rootNode = nodeManager.EnsureFolder("Core/Templating/Templates");
+            var rootNode = await nodeManager.EnsureFolderAsync("Core/Templating/Templates");
 
             var templateTypes = ReflectionHelper.GetClassesWithAttribute(typeof(TemplateAttribute), true, assembly);
             foreach (var templateType in templateTypes)
@@ -136,7 +138,7 @@ namespace Crolow.Cms.Server.Managers.Upgrades.Upgrade
                     template.Layout = form;
 
                     dataManager.Update(template);
-                    nodeManager.Update(node);
+                    await nodeManager.UpdateAsync(node);
                 }
             }
         }

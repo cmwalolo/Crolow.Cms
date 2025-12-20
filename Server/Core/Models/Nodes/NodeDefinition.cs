@@ -23,7 +23,7 @@ namespace Crolow.Cms.Server.Core.Models.Nodes
             Id = ObjectId.GenerateNewId();
         }
 
-        public ObjectId Id { get; set; }
+        public ObjectId Id { get; set; } = ObjectId.Empty;
         public ObjectId[] Parents { get; set; }
 
         public IDataLink DataLink { get; set; }

@@ -4,17 +4,18 @@ using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Crolow.Cms.Server.Core.Interfaces.Managers
 {
     public interface INodeManager
     {
-        IEnumerable<NodeDefinition> GetChildren(ObjectId dataLink);
-        NodeDefinition EnsureFolder(string path);
-        NodeDefinition EnsureFolderFrom(DataStore store, IDataObject dataObject, string path);
+        Task<IEnumerable<NodeDefinition>> GetChildrenAsync(ObjectId dataLink);
+        Task<NodeDefinition> EnsureFolderAsync(string path);
+        Task<NodeDefinition> EnsureFolderFromAsync(DataStore store, NodeDefinition node, string path);
 
-        NodeDefinition GetNode(IDataObject dataObject);
-        NodeDefinition GetNode(ObjectId dataLink);
-        void Update(INodeDefinition node);
+        Task<NodeDefinition> GetNodeAsync(IDataObject dataObject);
+        Task<NodeDefinition> GetNodeAsync(ObjectId dataLink);
+        Task<bool> UpdateAsync(INodeDefinition node);
     }
 }

@@ -84,10 +84,11 @@ namespace Kalow.Apps.Managers.Data
             return entity;
         }
 
-        public List<IEntityContainer<T>> Children<T>(DataRequest link) where T : IDataObject
+        public async Task<List<IEntityContainer<T>>> Children<T>(DataRequest link) where T : IDataObject
         {
             var result = new List<IEntityContainer<T>>();
-            foreach (var node in Common.nodeManager.GetChildren(link.DataLink))
+            var nodes = await Common.nodeManager.GetChildrenAsync(link.DataLink);
+            foreach (var node in nodes)
             {
                 result.Add(LoadEntity<T>(link, node).Result);
             }
@@ -105,7 +106,7 @@ namespace Kalow.Apps.Managers.Data
 
             if (link.LoadType.HasFlag(LoadType.LoadNode))
             {
-                container.NodeDefinition = Common.nodeManager.GetNode(node.DataLink.DataId);
+                container.NodeDefinition = await Common.nodeManager.GetNodeAsync(node.DataLink.DataId);
             }
 
             if (link.LoadType.HasFlag(LoadType.LoadRelations))
@@ -124,7 +125,7 @@ namespace Kalow.Apps.Managers.Data
         public void UpdateEntity<T>(EntityContainer<T> container) where T : IDataObject
         {
             if (container.DataObject != null) moduleProvider.GetContext<T>().Update<T>(p => p.Id == container.DataObject.Id, container.DataObject);
-            if (container.NodeDefinition != null) Common.nodeManager.Update(container.NodeDefinition);
+            if (container.NodeDefinition != null) Common.nodeManager.UpdateAsync(container.NodeDefinition);
             if (container.Translations != null) Common.translationManager.Update(container.Translations);
             if (container.Relations != null) Common.relationManager.Update(container.Relations);
         }

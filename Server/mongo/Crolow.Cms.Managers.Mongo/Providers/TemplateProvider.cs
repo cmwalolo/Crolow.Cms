@@ -1,7 +1,4 @@
 ﻿using Crolow.Cms.Server.Core.Interfaces.Managers;
-using Crolow.Cms.Server.Core.Interfaces.Models.Data;
-using Crolow.Cms.Server.Core.Models.Actions;
-using Crolow.Cms.Server.Core.Models.Databases;
 using Crolow.Cms.Server.Core.Models.Templates.Data;
 using Kalow.Apps.Managers.Data;
 using MongoDB.Bson;
@@ -61,23 +58,7 @@ namespace Kalow.Apps.Managers.Providers
             return null;
         }
 
-        private void LoadSections(DataTemplate template)
-        {
-            DataStore store = null;
-            var root = nodeManager.EnsureFolderFrom(store, template, "Sections");
-            var request = new DataRequest(LoadType.LoadObjectTranslated) { DataLink = root.Id };
-            template.Sections = manager.Children<DataTemplateSection>(request);
-            LoadFields(template.Sections);
-        }
 
-        private void LoadFields(List<IEntityContainer<DataTemplateSection>> sections)
-        {
-            foreach (var section in sections)
-            {
-                var request = new DataRequest(LoadType.LoadObjectTranslated) { DataLink = section.DataObject.Id };
-                section.DataObject.Fields = manager.Children<DataTemplateField>(request);
-            }
-        }
 
         protected void ReloadCache()
         {
@@ -86,10 +67,6 @@ namespace Kalow.Apps.Managers.Providers
             {
                 cacheByKey.Add(Type.GetType(item.DefaultType), item);
                 cacheById.Add(item.Id, item);
-            }
-            foreach (var item in list)
-            {
-                LoadSections(item);
             }
         }
     }

@@ -8,6 +8,7 @@ using Crolow.Cms.Server.Core.Models.Nodes;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Kalow.Apps.Managers.Data
 {
@@ -21,34 +22,33 @@ namespace Kalow.Apps.Managers.Data
         }
 
         #region Read 
-        public NodeDefinition GetNode(IDataObject dataObject)
+        public async Task<NodeDefinition> GetNodeAsync(IDataObject dataObject)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
-            return nodeRepository.Get<NodeDefinition>(t => t.Id == dataObject.Id).Result;
+            return await nodeRepository.Get<NodeDefinition>(t => t.Id == dataObject.Id);
         }
-        public NodeDefinition GetNode(ObjectId dataLink)
+        public async Task<NodeDefinition> GetNodeAsync(ObjectId dataLink)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
-            return nodeRepository.Get<NodeDefinition>(t => t.Id == dataLink).Result;
+            return await nodeRepository.Get<NodeDefinition>(t => t.Id == dataLink);
         }
 
-        public IEnumerable<NodeDefinition> GetChildren(ObjectId dataLink)
+        public async Task<IEnumerable<NodeDefinition>> GetChildrenAsync(ObjectId dataLink)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
             var filter = Builders<NodeDefinition>.Filter.Eq("ParentId.Guid", dataLink);
-            return nodeRepository.List<NodeDefinition>(t => t.Parent == dataLink).Result;
+            return await nodeRepository.List<NodeDefinition>(t => t.Parent == dataLink);
         }
         #endregion
 
         #region utils
-        public NodeDefinition EnsureFolder(string path)
+        public async Task<NodeDefinition> EnsureFolderAsync(string path)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
-            NodeDefinition parentNode = null;
-            ObjectId parent = ObjectId.Empty;
+            NodeDefinition parentNode = new NodeDefinition();
             foreach (string p in path.Split('/'))
             {
-                parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
+                parentNode = await nodeRepository.Get<NodeDefinition>(t => t.Parent == parentNode.Id && t.Key == p);
                 if (parentNode == null)
                 {
                     var node = new NodeDefinition();
@@ -66,7 +66,7 @@ namespace Kalow.Apps.Managers.Data
                         node.SetParent(parentNode);
                     }
 
-                    nodeRepository.Add<NodeDefinition>(node);
+                    await nodeRepository.Add<NodeDefinition>(node);
                     parentNode = node;
                 }
             }
@@ -74,35 +74,28 @@ namespace Kalow.Apps.Managers.Data
             // Last node 
             return parentNode;
         }
-        public NodeDefinition EnsureFolderFrom(DataStore store, IDataObject dataObject, string path)
+        public async Task<NodeDefinition> EnsureFolderFromAsync(DataStore store, NodeDefinition node, string path)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
+            var parentNode = await nodeRepository.Get<NodeDefinition>(t => t.Parent == node.Id);
 
-            ObjectId parent = dataObject.Id;
-            NodeDefinition parentNode = null;
             foreach (string p in path.Split('/'))
             {
                 var builder = Builders<NodeDefinition>.Filter;
 
-                parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parent && t.Key == p).Result;
+                parentNode = nodeRepository.Get<NodeDefinition>(t => t.Parent == parentNode.Id && t.Key == p).Result;
                 if (parentNode == null)
                 {
-                    var node = new NodeDefinition();
-                    node.Id = ObjectId.GenerateNewId();
-                    node.Key = path;
-
-                    new DataLink
-                    {
-                        DataId = dataObject.Id,
-                        DatastoreId = store.Id
-                    };
+                    var newNode = new NodeDefinition();
+                    newNode.Id = ObjectId.GenerateNewId();
+                    newNode.Key = path;
 
                     if (parentNode != null)
                     {
-                        node.SetParent(parentNode);
+                        newNode.SetParent(parentNode);
                     }
 
-                    nodeRepository.Add<NodeDefinition>(node);
+                    await nodeRepository.Add<NodeDefinition>(node);
                     parentNode = node;
                 }
             }
@@ -112,23 +105,24 @@ namespace Kalow.Apps.Managers.Data
         #endregion
 
         #region Write
-        public void Update(INodeDefinition node)
+        public async Task<bool> UpdateAsync(INodeDefinition node)
         {
             var nodeRepository = this.moduleProvider.GetNodeContext();
             switch (node.EditState)
             {
                 case EditState.New:
-                    nodeRepository.Add<INodeDefinition>(node);
+                    await nodeRepository.Add<INodeDefinition>(node);
                     break;
                 case EditState.Update:
-                    nodeRepository.Update<INodeDefinition>(t => t.Id == node.Id, node);
+                    await nodeRepository.Update<INodeDefinition>(t => t.Id == node.Id, node);
                     break;
                 case EditState.ToDelete:
-                    nodeRepository.Remove<INodeDefinition>(t => t.Id == node.Id);
+                    await nodeRepository.Remove<INodeDefinition>(t => t.Id == node.Id);
                     break;
 
             }
             node.EditState = EditState.Unchanged;
+            return true;
         }
         #endregion
     }
