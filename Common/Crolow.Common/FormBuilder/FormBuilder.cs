@@ -466,7 +466,7 @@ internal static class ValueKindResolver
         if (nt.IsEnum) return ValueKind.Enum;
 
         if (IsNumber(nt)) return ValueKind.Number;
-
+        if (nt is IEnumerable<object>) return ValueKind.Collection
         return ValueKind.Object;
     }
 

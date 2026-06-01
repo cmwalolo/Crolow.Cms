@@ -1,4 +1,5 @@
 using Crolow.Cms.Server.Core.Enums;
+using Crolow.Cms.Server.Core.Interfaces.Models.Nodes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -10,7 +11,7 @@ namespace Crolow.Cms.Server.Core.Interfaces.Models.Data
         [BsonIgnore]
         EditState EditState { get; set; }
         ObjectId Id { get; set; }
-        public ObjectId DataStoreId { get; set; }
-        public ITracking Tracking { get; set; }
+        ITracking Tracking { get; set; }
+        INodeDefinition Node { get; set; }
     }
 }

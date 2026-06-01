@@ -63,7 +63,6 @@ namespace Kalow.Apps.Managers.Data
             entity.DataObject = System.Activator.CreateInstance<T>();
             entity.DataObject.EditState = EditState.New;
             entity.DataObject.Id = ObjectId.GenerateNewId();
-            entity.DataObject.DataStoreId = dataStore.Id;
 
             entity.NodeDefinition = new NodeDefinition();
             entity.NodeDefinition.Id = ObjectId.GenerateNewId();
@@ -74,6 +73,7 @@ namespace Kalow.Apps.Managers.Data
             };
             entity.NodeDefinition.EditState = EditState.New;
 
+            entity.DataObject.Node = entity.NodeDefinition;
             entity.DataObject.Tracking = new Tracking();
             entity.DataObject.Tracking.EditState = EditState.New;
 

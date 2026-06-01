@@ -72,8 +72,5 @@ namespace Crolow.Cms.Server.Core.Models.Templates.Data
         [BsonIgnore]
         public List<IEntityContainer<DataRelationDefinition>> DataRelations { get; set; }
 
-        [BsonIgnore]
-        public List<IEntityContainer<DataTemplateSection>> Sections { get; set; }
-
     }
 }
